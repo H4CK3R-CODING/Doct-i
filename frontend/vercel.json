@@ -1,0 +1,24 @@
+{
+  "routes":[
+      {
+          "src": "/",
+          "dest": "/"
+      },
+      {
+          "src":"/registerDoctor",
+          "dest": "/"
+      },
+      {
+          "src":"/registerPatient",
+          "dest": "/"
+      },
+      {
+          "src":"/loginDoctor",
+          "dest": "/"
+      },
+      {
+          "src":"/loginPatient",
+          "dest": "/"
+      }
+  ]
+}
