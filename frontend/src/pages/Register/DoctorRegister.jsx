@@ -29,7 +29,7 @@ const DoctorRegister = () => {
     },
     {
       label: "Phone Number",
-      id: "nubmer",
+      id: "phone",
       placeholder: "Enter Phone Number",
       inputType: "Number",
       onchange: (event) => {
