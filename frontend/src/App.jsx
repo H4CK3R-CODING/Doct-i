@@ -6,10 +6,12 @@ import DoctorRegister from "./pages/Register/DoctorRegister";
 import PatientRegister from "./pages/Register/PatientRegister";
 import LoginDoctor from "./pages/Login/LoginDoctor";
 import LoginPatient from "./pages/Login/LoginPatient";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   return (
     <>
+      <Toaster position="top-center" />
       <Routes>
         <Route path="/" element={<Home />}></Route>
         {/* <Route path="/signin" element={<SignIn />}></Route> */}

@@ -8,7 +8,6 @@ import patientAuth from "../zod/patientAuth.js";
 const patientRegister = async (req, res) => {
   try {
     const { success } = patientAuth.safeParse(req.body);
-
     if (!success) {
       res.status(401).json({
         msg: "Some mistake in your inputs",
@@ -56,7 +55,7 @@ const patientRegister = async (req, res) => {
     });
 
     res.status(200).json({
-      msg: "Patient Registered !",
+      msg: "Patient Registered",
     });
   } catch (error) {
     console.log(
@@ -69,7 +68,6 @@ const patientLogin = async (req, res) => {
   try {
     const { username, password } = req.body;
     const { success, error } = signAuth.safeParse(req.body);
-
     if (!success) {
       // console.log(error)
       res.status(201).json({

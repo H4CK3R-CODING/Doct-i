@@ -8,7 +8,7 @@ import jwt from "jsonwebtoken"
 const doctorRegister = async (req, res) => {
   try {
     const { success } = doctorAuth.safeParse(req.body);
-
+    console.log(success)
     if (!success) {
       res.status(401).json({
         msg: "Some mistake in your inputs",
@@ -71,7 +71,7 @@ const doctorRegister = async (req, res) => {
     });
 
     res.status(200).json({
-      msg: "Doctor Registered !",
+      msg: "Doctor Registered",
     });
 
 
@@ -98,7 +98,12 @@ const doctorLogin = async (req, res)=>{
         const isUser = await Doctor.findOne({
             gmail : username
         })
-        
+        if(isUser!== null && !isUser.verified){
+          res.status(201).json({
+            msg: "Admin don't access you"
+          })
+          return ;
+        }
         if(isUser !== null){
             const checkPassword = await bcrypt.compare(password, isUser.password);
             if(checkPassword){

@@ -38,6 +38,10 @@ const dotorSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
+  isVerify:{
+    type: Boolean,
+    default: false
+  }
 });
 
 const Doctor = new mongoose.model("Doctor", dotorSchema);

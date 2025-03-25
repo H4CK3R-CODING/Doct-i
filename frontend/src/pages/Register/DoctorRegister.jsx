@@ -2,11 +2,21 @@ import React, { useState } from "react";
 import InputContainer from "../../components/InputContainer/InputContainer";
 import Loading from "../../components/Loading";
 import Btn from "../../components/Btn";
+import toast from "react-hot-toast";
+import axios from "axios";
+import validateEmail from "../../../utils/validateEmail";
 
 const DoctorRegister = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [name, setName] = useState("");
   const [gmail, setGmail] = useState("");
+  const [phone, setPhone] = useState(null);
+  const [age, setAge] = useState(null);
+  const [experience, setExperience] = useState(null);
+  const [qualification, setQualification] = useState("");
+  const [licence, setLicence] = useState("");
+  const [password, setPassword] = useState("");
+  const [specilization, setSpecilization] = useState("");
 
   const noInput = [
     {
@@ -33,7 +43,7 @@ const DoctorRegister = () => {
       placeholder: "Enter Phone Number",
       inputType: "Number",
       onchange: (event) => {
-        setGmail(event.target.value);
+        setPhone(event.target.value);
       },
     },
     {
@@ -42,7 +52,7 @@ const DoctorRegister = () => {
       placeholder: "Enter Your Age",
       inputType: "Number",
       onchange: (event) => {
-        setName(event.target.value);
+        setAge(event.target.value);
       },
     },
     {
@@ -51,7 +61,7 @@ const DoctorRegister = () => {
       placeholder: "Enter Your Experience",
       inputType: "Number",
       onchange: (event) => {
-        setName(event.target.value);
+        setExperience(event.target.value);
       },
     },
     {
@@ -60,7 +70,7 @@ const DoctorRegister = () => {
       placeholder: "Enter Your Qualification",
       inputType: "text",
       onchange: (event) => {
-        setName(event.target.value);
+        setQualification(event.target.value);
       },
     },
     {
@@ -69,7 +79,7 @@ const DoctorRegister = () => {
       placeholder: "Enter Licence Number",
       inputType: "text",
       onchange: (event) => {
-        setName(event.target.value);
+        setLicence(event.target.value);
       },
     },
     {
@@ -78,7 +88,7 @@ const DoctorRegister = () => {
       placeholder: "Enter Password",
       inputType: "password",
       onchange: (event) => {
-        setName(event.target.value);
+        setPassword(event.target.value);
       },
     },
     {
@@ -87,7 +97,7 @@ const DoctorRegister = () => {
       placeholder: "Enter Specilization",
       inputType: "text",
       onchange: (event) => {
-        setName(event.target.value);
+        setSpecilization(event.target.value);
       },
     },
   ];
@@ -95,46 +105,62 @@ const DoctorRegister = () => {
   const btninfo = {
     label: "Register",
     onclick: async (event) => {
-      const semesterInt = parseInt(semester);
       try {
         event.preventDefault();
         setIsLoading(true);
-
-        // if (name == "" || semester == "" || branch == "" || gmail == "") {
-        //   toast.error("Please Fill Up Username and Password");
-        //   return;
-        // }
-        // if (!validateEmail(gmail)) {
-        //   toast.error("Write Valid Gmail");
-        //   return;
-        // }
-        // const config = {
-        //   headers: {
-        //     "Content-Type": "application/json",
-        //   },
-        // };
-        // const { data } = await axios.post(
-        //   `${import.meta.env.VITE_BACKENDURL}/api/v1/user/register`,
-        //   {
-        //     name,
-        //     semester: semesterInt,
-        //     branch,
-        //     gmail,
-        //   },
-        //   { withCredentials: true },
-        //   config
-        // );
-
-        // if (data.msg == "OTP sent Successfully") {
-        //   toast.success("OTP sent to Your Gmail");
-        //   navigate("/register/verify", {
-        //     state: { data: { name, semester, branch, gmail } },
-        //   });
-        // } else if (data.msg == "User already exist") {
-        //   toast.success("User already exist");
-        // } else {
-        //   toast.error("Some error fill query form");
-        // }
+        if (
+          name == "" ||
+          gmail == "" ||
+          phone == null ||
+          age == null ||
+          experience == null ||
+          qualification == "" ||
+          licence == "" ||
+          password == "" ||
+          specilization == ""
+        ) {
+          toast.error("Please Fill Up Important Details");
+          return;
+        }
+        if (!validateEmail(gmail)) {
+          toast.error("Write Valid Gmail");
+          return;
+        }
+        const config = {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        };
+        const phoneInt = parseInt(phone);
+        const ageInt = parseInt(age);
+        const experienceInt = parseInt(experience)
+        
+        const { data } = await axios.post(
+          `${import.meta.env.VITE_BACKENDURL}/api/v1/user/doctorRegister`,
+          {
+            name,
+            gmail,
+            phone: phoneInt,
+            age: ageInt,
+            experience: experienceInt,
+            qualification,
+            licence,
+            password,
+            specilization,
+          },
+          { withCredentials: true },
+          config
+        );
+        if (data.msg == "Doctor Registered") {
+          toast.success("Doctor Registered Successfully!");
+          // navigate("/register/verify", {
+          //   state: { data: { name, semester, branch, gmail } },
+          // });
+        } else if (data.msg == "User already exist") {
+          toast.success("User already exist");
+        } else {
+          toast.error("Some error fill query form");
+        }
       } catch (error) {
         toast.error("Error on Backend Side");
       } finally {

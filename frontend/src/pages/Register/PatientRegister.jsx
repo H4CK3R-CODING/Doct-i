@@ -3,11 +3,19 @@ import InputContainer from "../../components/InputContainer/InputContainer";
 import Loading from "../../components/Loading";
 import Btn from "../../components/Btn";
 import Option from "../../components/Option";
+import toast from "react-hot-toast";
+import validateEmail from "../../../utils/validateEmail";
+import axios from "axios";
 
 const DoctorRegister = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [name, setName] = useState("");
   const [gmail, setGmail] = useState("");
+  const [phone, setPhone] = useState(null);
+  const [age, setAge] = useState(null);
+  const [disease, setDisease] = useState("");
+  const [password, setPassword] = useState("");
+  const [gender, setGender] = useState("male");
 
   const noInput = [
     {
@@ -30,11 +38,11 @@ const DoctorRegister = () => {
     },
     {
       label: "Phone Number",
-      id: "nubmer",
+      id: "phone",
       placeholder: "Enter Phone Number",
       inputType: "Number",
       onchange: (event) => {
-        setGmail(event.target.value);
+        setPhone(event.target.value);
       },
     },
     {
@@ -43,7 +51,7 @@ const DoctorRegister = () => {
       placeholder: "Enter Your Age",
       inputType: "Number",
       onchange: (event) => {
-        setName(event.target.value);
+        setAge(event.target.value);
       },
     },
     {
@@ -52,7 +60,7 @@ const DoctorRegister = () => {
       placeholder: "Previous Disease",
       inputType: "text",
       onchange: (event) => {
-        setName(event.target.value);
+        setDisease(event.target.value);
       },
     },
     {
@@ -61,7 +69,7 @@ const DoctorRegister = () => {
       placeholder: "Enter Password",
       inputType: "password",
       onchange: (event) => {
-        setName(event.target.value);
+        setPassword(event.target.value);
       },
     },
   ];
@@ -69,10 +77,56 @@ const DoctorRegister = () => {
   const btninfo = {
     label: "Register",
     onclick: async (event) => {
-      const semesterInt = parseInt(semester);
       try {
         event.preventDefault();
         setIsLoading(true);
+        if (
+          name == "" ||
+          gmail == "" ||
+          phone == null ||
+          age == null ||
+          disease == "" ||
+          password == "" ||
+          gender == ""
+        ) {
+          toast.error("Please Fill Up Important Details");
+          return;
+        }
+        if (!validateEmail(gmail)) {
+          toast.error("Write Valid Gmail");
+          return;
+        }
+        const config = {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        };
+        const phoneInt = parseInt(phone);
+        const ageInt = parseInt(age)
+        const { data } = await axios.post(
+          `${import.meta.env.VITE_BACKENDURL}/api/v1/user/patientRegister`,
+          {
+            name,
+            gmail,
+            phone: phoneInt,
+            age: ageInt,
+            disease,
+            password,
+            gender,
+          },
+          { withCredentials: true },
+          config
+        );
+        if (data.msg == "Patient Registered") {
+          toast.success("Patient Registered Successfully!");
+          // navigate("/register/verify", {
+          //   state: { data: { name, semester, branch, gmail } },
+          // });
+        } else if (data.msg == "User already exist") {
+          toast.success("User already exist");
+        } else {
+          toast.error("Some error fill query form");
+        }
       } catch (error) {
         toast.error("Error on Backend Side");
       } finally {
@@ -84,18 +138,18 @@ const DoctorRegister = () => {
   const data = [
     {
       label: "Gender",
-      sele: "gen",
+      sele: "gender",
       opt: [
         {
-          val: 1,
+          val: "male",
           name: "Male",
         },
         {
-          val: 2,
+          val: "female",
           name: "Female",
         },
         {
-          val: 3,
+          val: "other",
           name: "Other",
         },
       ],
@@ -113,7 +167,7 @@ const DoctorRegister = () => {
             return <InputContainer key={idx} detail={ele} />;
           })}
           {data.map((ele, idx) => {
-            return <Option key={idx} opt={ele} />;
+            return <Option key={idx} opt={ele}  setGender={setGender} />;
           })}
           {isLoading ? <Loading /> : <Btn btninfo={btninfo} />}
         </form>
