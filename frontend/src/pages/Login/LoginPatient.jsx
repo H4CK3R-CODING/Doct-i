@@ -93,11 +93,19 @@ const LoginDoctor = () => {
 
   return (
     <>
-      <h1 className="text-4xl p-2 m-2 font-semibold text-center text-heading">
-        Patient Login
-      </h1>
-      <div className="flex justify-center items-center bg-background">
-        <form className="w-full px-9 md:w-1/2">
+      <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+        <img
+          alt="Your Company"
+          src="user-profile.png"
+          // src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600"
+          className="mx-auto h-20 w-auto"
+        />
+        <h2 className="mt-4 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
+          Sign in to your account
+        </h2>
+      </div>
+      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-sm">
+        <form className="space-y-6">
           {noInput.map((ele, idx) => {
             return <InputContainer key={idx} detail={ele} />;
           })}

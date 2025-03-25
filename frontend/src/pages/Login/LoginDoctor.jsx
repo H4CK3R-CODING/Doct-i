@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import Loading from "../../components/Loading";
 import InputContainer from "../../components/InputContainer/InputContainer";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Btn from "../../components/Btn";
 import axios from "axios";
 import toast from "react-hot-toast";
+import Sign from "../../components/Sign/Sign";
 
 const LoginDoctor = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -44,7 +45,7 @@ const LoginDoctor = () => {
           toast.error("Please Fill Up Username and Password");
           return;
         }
-        
+
         const config = {
           headers: {
             "Content-Type": "application/json",
@@ -63,8 +64,8 @@ const LoginDoctor = () => {
         if (data.msg == "Successfully Login") {
           toast.success("Successfully Login");
           // setIsLoggedIn(true);
-          localStorage.setItem("token", data.jwt)
-          
+          localStorage.setItem("token", data.jwt);
+
           // console.log(data.jwt)
           // localStorage.setItem("isLoggedIn", {
           //     value: true,
@@ -82,8 +83,6 @@ const LoginDoctor = () => {
         } else {
           toast.error("Fill Up Again");
         }
-
-
       } catch (error) {
         toast.error("Try Again Some Issue Occur");
         console.log(error);
@@ -94,20 +93,37 @@ const LoginDoctor = () => {
   };
 
   return (
-    <>
-      <h1 className="text-4xl p-2 m-2 font-semibold text-center text-heading">
-        Doctor Login
-      </h1>
-      <div className="flex justify-center items-center bg-background">
-        <form className="w-full px-9 md:w-1/2">
+    <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+      <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+        <img
+          alt="Your Company"
+          src="doctor.png"
+          // src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600"
+          className="mx-auto h-20 w-auto"
+        />
+        <h2 className="mt-4 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
+          Sign in to your account
+        </h2>
+      </div>
+      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-sm">
+        <form className="space-y-6">
           {noInput.map((ele, idx) => {
             return <InputContainer key={idx} detail={ele} />;
           })}
           {/* <Link to={"/forgetpass"} className="text-blue-600 underline my-3 block">Forget Password!</Link> */}
           {isLoading ? <Loading /> : <Btn btninfo={btninfo} />}
         </form>
+        <p className="mt-10 text-center text-sm/6 text-gray-500">
+          Not a member?{" "}
+          <Link
+            to="/registerDoctor"
+            className="font-semibold text-indigo-600 hover:text-indigo-500"
+          >
+            Register as Doctor
+          </Link>
+        </p>
       </div>
-    </>
+    </div>
   );
 };
 

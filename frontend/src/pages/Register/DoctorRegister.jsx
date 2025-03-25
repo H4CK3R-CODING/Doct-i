@@ -170,11 +170,19 @@ const DoctorRegister = () => {
   };
   return (
     <>
-      <h1 className="text-4xl p-4 font-semibold text-center text-heading">
+      <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-1 lg:px-8">
+        <img
+          alt="Your Company"
+          src="doctor.png"
+          // src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600"
+          className="mx-auto h-20 w-auto"
+        />
+        <h2 className="mt-4 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
         Doctor Registration
-      </h1>
-      <div className=" flex justify-center bg-background items-center">
-        <form className="w-full px-9 md:w-[75vw]">
+        </h2>
+      </div>
+      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-sm">
+        <form className="space-y-6">
           {noInput.map((ele, idx) => {
             return <InputContainer key={idx} detail={ele} />;
           })}

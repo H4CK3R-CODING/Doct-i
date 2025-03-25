@@ -10,11 +10,12 @@ const Option = ({ opt, setGender }) => {
 
   return (
     <div className="flex flex-col my-2">
-      <label className='text-xl text-heading font-[450] cursor-pointer font-[Poppins]' htmlFor={`${opt.sele}`}>{opt.label}</label>
+      <label className="block text-sm/6 font-medium text-gray-900"  htmlFor={`${opt.sele}`}>{opt.label}</label>
       <select
         name={`${opt.sele}`}
         id={`${opt.sele}`}
-        className={`font-[400] text-lg rounded-lg p-2 m-1 block ${theme === "dark" ? "bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500" : "bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500"}`}
+        // className={`font-[400] text-lg rounded-lg p-2 m-1 block ${theme === "dark" ? "bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500" : "bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500"}`}
+        className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
         required
         onChange={(event) => {
           console.log("jksjdf");

@@ -7,10 +7,12 @@ import PatientRegister from "./pages/Register/PatientRegister";
 import LoginDoctor from "./pages/Login/LoginDoctor";
 import LoginPatient from "./pages/Login/LoginPatient";
 import { Toaster } from "react-hot-toast";
+import Navbar from "./components/Navbar/Navbar";
 
 function App() {
   return (
     <>
+      <Navbar/>
       <Toaster position="top-center" />
       <Routes>
         <Route path="/" element={<Home />}></Route>
