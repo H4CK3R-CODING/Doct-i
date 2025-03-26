@@ -42,9 +42,14 @@ const bookingDoctor = async (req, res) => {
 
 const getBookingByDoctor = async (req, res) => {
   try {
-    const doctorId = req.body.userId;
+    const doctorId = await req.body.userId;
     // const doctorId = new mongoose.Types.ObjectId(req.body.userId);
-    const bookings = await Booking.find({ doctor_id: doctorId });
+    if(!doctorId){
+      return res.status(400).json({
+        msg : "User not Logged In"
+      })
+    }
+    const bookings = await Booking.find({ doctor_id: doctorId }).populate(['doctor_id','patient_id']).exec();
     return res.status(200).send(bookings);
   } catch (error) {
     console.log(
@@ -58,7 +63,7 @@ const getBookingByPatient = async (req, res) => {
   try {
     const patientId = await req.body.userId;
     //const patientId = new mongoose.Types.ObjectId(req.body.userId);
-    console.log(patientId)
+    // console.log(patientId)
     if(!patientId){
       return res.status(400).json({
         msg : "User not Logged In"

@@ -5,10 +5,10 @@ import Atoms, { userRecoil } from "../../Recoils/Atoms";
 import toast from "react-hot-toast";
 import List from "./List";
 
-const Mybooking = () => {
+const Bookings = () => {
   const [loading, setLoading] = useState(true);
   const userId = useRecoilValue(Atoms.userId);
-  const [booking, setBooking] = useRecoilState(Atoms.booking);
+  const [appointments, setAppointments] = useRecoilState(Atoms.appointments);
   const getBookings = async () => {
     setLoading(true);
     try {
@@ -26,14 +26,14 @@ const Mybooking = () => {
       const { data } = await axios.post(
         `${
           import.meta.env.VITE_BACKENDURL
-        }/api/v1/booking/getbookingsByPatient`,
+        }/api/v1/booking/getbookingsByDoctor`,
         { userId: userId },
         { withCredentials: true },
         config
       );
 
       if (data) {
-        setBooking(data);
+        setAppointments(data);
         console.dir(data)
       } else {
         console.log("Not Booking");
@@ -55,7 +55,7 @@ const Mybooking = () => {
         "Loading..."
       ) : (
         <div>
-          {booking.map((ele, idx) => {
+          {appointments.map((ele, idx) => {
             return (
               <div key={idx} className="flex justify-center p-4 ">
                 <List bookingDetails={ele}/>
@@ -73,4 +73,4 @@ const Mybooking = () => {
   );
 };
 
-export default Mybooking;
+export default Bookings;

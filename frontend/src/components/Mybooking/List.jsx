@@ -9,13 +9,19 @@ import {
   PencilIcon,
 } from "@heroicons/react/20/solid";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
+import { useRecoilValue } from "recoil";
+import { userRecoil } from "../../Recoils/Atoms";
 
-export default function List({bookingDetails}) {
+export default function List({ bookingDetails }) {
+  const user = useRecoilValue(userRecoil);
   return (
-    <div className="lg:flex lg:items-center lg:justify-between">
+    <div className="shadow-lg w-[80vw] p-4 rounded-md lg:flex lg:items-center lg:justify-between">
+      
       <div className="min-w-0 flex-1">
         <h2 className="text-2xl/7 font-bold text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">
-          {bookingDetails?.doctor_id?.name}
+          {user == "Patient"
+            ? bookingDetails?.doctor_id?.name
+            : bookingDetails?.patient_id?.name}
         </h2>
         <div className="mt-1 flex flex-col sm:mt-0 sm:flex-row sm:flex-wrap sm:space-x-6">
           <div className="mt-2 flex items-center text-sm text-gray-500">
@@ -25,13 +31,17 @@ export default function List({bookingDetails}) {
             />
             Full-time
           </div>
-          <div className="mt-2 flex items-center text-sm text-gray-500">
-            <MapPinIcon
-              aria-hidden="true"
-              className="mr-1.5 size-5 shrink-0 text-gray-400"
-            />
-            {bookingDetails?.doctor_id?.location}
-          </div>
+          {user == "Patient" ?? (
+            <div className="mt-2 flex items-center text-sm text-gray-500">
+              <MapPinIcon
+                aria-hidden="true"
+                className="mr-1.5 size-5 shrink-0 text-gray-400"
+              />
+              {user == "Patient"
+                ? bookingDetails?.doctor_id?.location
+                : bookingDetails?.patient_id?.location}
+            </div>
+          )}
           <div className="mt-2 flex items-center text-sm text-gray-500">
             <CurrencyDollarIcon
               aria-hidden="true"
@@ -44,7 +54,7 @@ export default function List({bookingDetails}) {
               aria-hidden="true"
               className="mr-1.5 size-5 shrink-0 text-gray-400"
             />
-            Slot
+            {user=="Patient"?bookingDetails?.slot:bookingDetails?.slot}
           </div>
         </div>
       </div>
@@ -54,11 +64,25 @@ export default function List({bookingDetails}) {
             type="button"
             className="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
           >
-            <PencilIcon
+            {/* <PencilIcon
               aria-hidden="true"
               className="-ml-0.5 mr-1.5 size-5 text-gray-400"
-            />
-            Edit
+            /> */}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="-ml-0.5 mr-1.5 size-5 text-gray-600"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+              />
+            </svg>
+            Change Slot
           </button>
         </span>
 
@@ -67,11 +91,25 @@ export default function List({bookingDetails}) {
             type="button"
             className="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
           >
-            <LinkIcon
+            {/* <LinkIcon
               aria-hidden="true"
               className="-ml-0.5 mr-1.5 size-5 text-gray-400"
-            />
-            View
+            /> */}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              className="-ml-0.5 mr-1.5 size-5 text-red-500"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="m20.25 7.5-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5m6 4.125 2.25 2.25m0 0 2.25 2.25M12 13.875l2.25-2.25M12 13.875l-2.25 2.25M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z"
+              />
+            </svg>
+            Cancel
           </button>
         </span>
 
@@ -81,7 +119,7 @@ export default function List({bookingDetails}) {
             className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
             <CheckIcon aria-hidden="true" className="-ml-0.5 mr-1.5 size-5" />
-            Publish
+            Verify
           </button>
         </span>
 

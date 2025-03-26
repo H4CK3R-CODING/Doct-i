@@ -112,4 +112,16 @@ const patientLogin = async (req, res) => {
   }
 };
 
-export { patientRegister, patientLogin };
+const logout = (req,res) =>{
+
+  try {
+      res.cookie("jwt", "", { maxAge: 0 });
+      res.status(201).json({ message: "Logged out successfully." });
+  } catch (error) {
+      console.log("Error in login controller", error.message);
+      res.status(501).json({ error: "Internal Server Error" });
+  }
+
+}
+
+export { patientRegister, patientLogin , logout};

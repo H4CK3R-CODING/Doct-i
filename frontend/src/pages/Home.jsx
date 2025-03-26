@@ -3,14 +3,20 @@ import DoctorRegister from "./Register/DoctorRegister";
 import Sign from "../components/Sign/Sign";
 import Mybooking from "../components/Mybooking/Mybooking";
 import List from "../components/Mybooking/List";
+import Bookings from "../components/Mybooking/Bookings";
+import { useRecoilValue } from "recoil";
+import { userRecoil } from "../Recoils/Atoms";
 
 const Home = () => {
+  const user = useRecoilValue(userRecoil)
   return (
     <div className="text-lg">
       Home
       {/* <DoctorRegister/> */}
       {/* <Sign/> */}
-      <Mybooking/>
+      {user=="Patient"? <Mybooking/>: <Bookings/>}
+      
+      
       {/* <List/> */}
     </div>
   );
