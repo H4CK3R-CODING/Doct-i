@@ -29,7 +29,7 @@ const bookingDoctor = async (req, res) => {
       reportfile,
     });
 
-    return res.status(200).json(booking);
+    return res.status(200).json({ msg: "Booked Successfully", booking });
   } catch (error) {
     console.log(
       "Error occure in the bookingDoctor.controller.js ===> " + error.message

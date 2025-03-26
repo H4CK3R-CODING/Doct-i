@@ -36,11 +36,13 @@ const isLoggedIn = async (req, res) => {
     if (userDoctor) {
       return res.status(200).json({
         msg: "userDoctor getted",
+        id: userId
       });
     }
 
     res.status(200).json({
       msg: "userPatient getted",
+      id: userId
     });
   } catch (error) {
     console.log("Error occure in the isLoggedIn.js ====> " + error.message);

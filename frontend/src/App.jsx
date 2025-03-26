@@ -12,7 +12,7 @@ import SearchDoctors from "./pages/SearchDoctors/SearchDoctors";
 import BookDoctor from "./pages/BookDoctor/BookDoctor";
 import { useRecoilState } from "recoil";
 import { use, useEffect } from "react";
-import { isLoginIn, userRecoil } from "./Recoils/Atoms";
+import Atoms, { isLoginIn, userRecoil } from "./Recoils/Atoms";
 import axios from "axios";
 // import isLoggedIn1 from "./Recoil/Recoil";
 
@@ -20,6 +20,7 @@ function App() {
   const { pathname } = useLocation();
   const [isLoggedIn, setIsLoggedIn] = useRecoilState(isLoginIn);
   const [user, setUser] = useRecoilState(userRecoil);
+  const [userId, setUserId] = useRecoilState(Atoms.userId)
 
   const checkLoggedIn = async () => {
     try {
@@ -39,9 +40,11 @@ function App() {
       if (data.msg == "userDoctor getted") {
         setIsLoggedIn(true);
         setUser("Doctor");
+        setUserId(data.id)
       } else if (data.msg == "userPatient getted") {
         setIsLoggedIn(true);
         setUser("Patient");
+        setUserId(data.id)
       } else {
         setIsLoggedIn(false);
       }
@@ -66,6 +69,7 @@ function App() {
     <>
       <Navbar />
       {user}
+      {userId}
       <Toaster position="top-center" />
       <Routes>
         <Route path="/" element={<Home />}></Route>

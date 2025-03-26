@@ -9,4 +9,15 @@ export const userRecoil = atom({
   key: "userRecoil",
   default: "",
 });
-// export default isLoginIn;
+
+export const userId = atom({
+  key: "userId",
+  default: ""
+})
+
+const Atoms = {
+  isLoginIn,
+  userRecoil,
+  userId
+}
+export default Atoms;

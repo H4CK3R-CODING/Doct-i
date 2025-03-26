@@ -1,13 +1,16 @@
 import axios from "axios";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
-import { FaFilePdf } from "react-icons/fa6";
 import { useLocation } from "react-router-dom";
+import { useRecoilValue } from "recoil";
+import Atoms from "../../Recoils/Atoms";
+import Loading from "../../components/Loading";
 
 const BookDoctor = () => {
   const [isLoading, setIsLoading] = useState(false);
   const location = useLocation();
   const doctor_id = location.state.doctor_id.toString();
+  const userId = useRecoilValue(Atoms.userId);
   const [slot, setSlot] = useState("");
   const [file, setFile] = useState(null);
   const [filePreview, setFilePreview] = useState(null);
@@ -32,7 +35,7 @@ const BookDoctor = () => {
       e.preventDefault();
       setIsLoading(true);
 
-      if (!slot || !file) {
+      if (!slot) {
         toast.error("Please select a slot and upload a file.");
         return;
       }
@@ -48,14 +51,19 @@ const BookDoctor = () => {
         {
           slot,
           doctor_id,
-          patient_id: "ksdjk",
+          patient_id: userId,
           reportfile: "file",
         },
         { withCredentials: true },
         config
       );
-      // Simulate form submission
-      alert(`Booking submitted with Slot: ${slot}`);
+      if (data.msg == "Booked Successfully") {
+        toast.success("Booked Successfully!");
+      } else if (data.msg == "Booking Exist") {
+        toast.success("Booking Exist");
+      } else {
+        toast.error("Some mistake in your inputs");
+      }
     } catch (error) {
       toast.error("Error on Backend Side");
     } finally {
@@ -113,12 +121,16 @@ const BookDoctor = () => {
         {console.dir(file?.type)}
 
         {/* Submit Button */}
-        <button
-          type="submit"
-          className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg"
-        >
-          Submit Booking
-        </button>
+        {isLoading ? (
+          <Loading />
+        ) : (
+          <button
+            type="submit"
+            className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg"
+          >
+            Submit Booking
+          </button>
+        )}
       </form>
     </div>
   );
