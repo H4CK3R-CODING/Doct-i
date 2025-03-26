@@ -38,6 +38,15 @@ const dotorSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
+  location: {
+    type: String,
+    required: true,
+  },
+  rating:{
+    type: Number,
+    required :false,
+    default: 0
+  },
   isVerify:{
     type: Boolean,
     default: false

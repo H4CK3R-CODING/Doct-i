@@ -10,6 +10,7 @@ const doctorAuth = zod.object({
   licence: zod.string().nonempty("Required"),
   password: zod.string(),
   specilization: zod.string(),
+  location: zod.string().nonempty("Required"),
 });
 
 export default doctorAuth;
