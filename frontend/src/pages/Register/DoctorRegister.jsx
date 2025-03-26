@@ -17,6 +17,7 @@ const DoctorRegister = () => {
   const [licence, setLicence] = useState("");
   const [password, setPassword] = useState("");
   const [specilization, setSpecilization] = useState("");
+  const [location, setLocation] = useState("");
 
   const noInput = [
     {
@@ -100,6 +101,15 @@ const DoctorRegister = () => {
         setSpecilization(event.target.value);
       },
     },
+    {
+      label: "City",
+      id: "location",
+      placeholder: "Enter City Location",
+      inputType: "text",
+      onchange: (event) => {
+        setLocation(event.target.value);
+      },
+    },
   ];
 
   const btninfo = {
@@ -117,7 +127,8 @@ const DoctorRegister = () => {
           qualification == "" ||
           licence == "" ||
           password == "" ||
-          specilization == ""
+          specilization == "",
+          location == ""
         ) {
           toast.error("Please Fill Up Important Details");
           return;
@@ -147,6 +158,7 @@ const DoctorRegister = () => {
             licence,
             password,
             specilization,
+            location
           },
           { withCredentials: true },
           config

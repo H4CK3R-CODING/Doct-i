@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Loading from "../../components/Loading";
 import InputContainer from "../../components/InputContainer/InputContainer";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Btn from "../../components/Btn";
 import toast from "react-hot-toast";
 import axios from "axios";
@@ -112,6 +112,15 @@ const LoginDoctor = () => {
           {/* <Link to={"/forgetpass"} className="text-blue-600 underline my-3 block">Forget Password!</Link> */}
           {isLoading ? <Loading /> : <Btn btninfo={btninfo} />}
         </form>
+        <p className="mt-10 text-center text-sm/6 text-gray-500">
+                  Not a member?{" "}
+                  <Link
+                    to="/registerPatient"
+                    className="font-semibold text-indigo-600 hover:text-indigo-500"
+                  >
+                    Register as Patient
+                  </Link>
+                </p>
       </div>
     </>
   );

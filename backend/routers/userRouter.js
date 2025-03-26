@@ -1,6 +1,7 @@
 import { Router } from "express"
 import {doctorLogin, doctorRegister, searchDoctor} from "../controllers/doctor.controller.js"
 import { patientLogin, patientRegister } from "../controllers/patient.controller.js"
+import isLoggedIn from "../controllers/isLoggedIn.controller.js"
 
 const router = Router()
 
@@ -9,5 +10,6 @@ router.post("/doctorLogin", doctorLogin)
 router.post("/patientRegister", patientRegister)
 router.post("/patientLogin", patientLogin)
 router.post("/searchDoctor", searchDoctor)
+router.post("/isLoggedIn", isLoggedIn)
 
 export default router
