@@ -98,7 +98,7 @@ const doctorLogin = async (req, res) => {
     const isUser = await Doctor.findOne({
       gmail: username,
     });
-    if (isUser !== null && !isUser.verified) {
+    if (isUser !== null && isUser.verified) {
       res.status(201).json({
         msg: "Admin don't access you",
       });

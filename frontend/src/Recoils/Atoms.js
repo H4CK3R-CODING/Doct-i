@@ -12,12 +12,18 @@ export const userRecoil = atom({
 
 export const userId = atom({
   key: "userId",
-  default: ""
-})
+  default: "",
+});
+
+export const booking = atom({
+  key: "booking",
+  default: [],
+});
 
 const Atoms = {
   isLoginIn,
   userRecoil,
-  userId
-}
+  userId,
+  booking,
+};
 export default Atoms;

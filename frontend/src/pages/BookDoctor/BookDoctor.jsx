@@ -118,7 +118,6 @@ const BookDoctor = () => {
             />
           </div>
         )}
-        {console.dir(file?.type)}
 
         {/* Submit Button */}
         {isLoading ? (
