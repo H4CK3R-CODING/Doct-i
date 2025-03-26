@@ -1,9 +1,10 @@
 import express from 'express'
 import userRouter from './userRouter.js';
+import bookingRouter from './bookingRouter.js';
 
 const mainRouter = express.Router();
 
 mainRouter.use("/user", userRouter);
-// mainRouter.use('/notes', notes);
+mainRouter.use('/booking', bookingRouter);
 
 export default mainRouter

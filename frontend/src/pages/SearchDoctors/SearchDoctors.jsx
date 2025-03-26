@@ -8,7 +8,7 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import Card from "../../components/BookDoctor/Card";
 
-const BookDoctor = () => {
+const SearchDoctors = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [search_by, setSearch_by] = useState("doctor_id");
   const [doctor_id, setDoctor_id] = useState("");
@@ -158,4 +158,4 @@ const BookDoctor = () => {
   );
 };
 
-export default BookDoctor;
+export default SearchDoctors;

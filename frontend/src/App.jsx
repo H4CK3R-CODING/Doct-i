@@ -9,6 +9,7 @@ import LoginPatient from "./pages/Login/LoginPatient";
 import { Toaster } from "react-hot-toast";
 import Navbar from "./components/Navbar/Navbar";
 import SearchDoctors from "./pages/SearchDoctors/SearchDoctors";
+import BookDoctor from "./pages/BookDoctor/BookDoctor";
 
 function App() {
   return (
@@ -23,7 +24,7 @@ function App() {
         <Route path="/loginDoctor" element={<LoginDoctor />}></Route>
         <Route path="/loginPatient" element={<LoginPatient />}></Route>
         <Route path="/searchDoctors" element={<SearchDoctors />}></Route>
-        <Route path="/bookingDoctor" element={<SearchDoctors />}></Route>
+        <Route path="/bookingDoctor" element={<BookDoctor />}></Route>
         <Route path="*" element={<Page404 />}></Route>
       </Routes>
     </>
