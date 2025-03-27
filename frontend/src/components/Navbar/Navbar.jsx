@@ -1,15 +1,19 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import Atoms from "../../Recoils/Atoms";
 import NavBtn from "./NavBtn";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 const Navbar = () => {
   const [userId, setUserId] = useRecoilState(Atoms.userId);
   const [user, setUser] = useRecoilState(Atoms.userRecoil);
+  const setAppointments = useSetRecoilState(Atoms.appointments);
+  const setBooking = useSetRecoilState(Atoms.booking);
   const [isLoggedIn, setIsLoggedIn] = useRecoilState(Atoms.isLoginIn);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+
   const data = [
     {
       label: "Doctor Register",
@@ -41,12 +45,18 @@ const Navbar = () => {
         localStorage.removeItem("token");
         setIsLoggedIn(false);
         setUserId("");
-        setUser("");
+        setAppointments([]);
+        setBooking([]);
         await axios.get(
           `${import.meta.env.VITE_BACKENDURL}/api/v1/user/logout`,
           { withCredentials: true }
         );
-        navigate("/")
+        {
+          user == "Patient"
+            ? navigate("/loginPatient")
+            : navigate("/loginDoctor");
+        }
+        setUser("");
       },
     },
   ];

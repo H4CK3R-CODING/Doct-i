@@ -1,9 +1,21 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
+import toast from "react-hot-toast";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useRecoilState } from "recoil";
+import Atoms from "../../Recoils/Atoms";
 
 const DoctorDetails = () => {
   const location = useLocation();
   const user = location.state.user;
+
+  const navigate = useNavigate();
+  const [userId, setUserId] = useRecoilState(Atoms.userId);
+
+  if (!userId) {
+    toast.error("You are not Logged in");
+    navigate("/loginDoctor");
+    return;
+  }
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-8">
       <div className="bg-white rounded-xl shadow-lg max-w-md w-full">
