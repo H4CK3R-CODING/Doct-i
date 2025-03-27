@@ -16,6 +16,86 @@ const SearchDoctors = () => {
   const [specilization, setSpecilization] = useState("");
   const [users, setUsers] = useState([]);
 
+  const specilizationArr = [
+    {
+      val: "",
+      name: "Choose Specilization",
+    },
+    {
+      val: "Dermatology",
+      name: "Dermatology",
+    },
+    {
+      val: "Neurology",
+      name: "Neurology",
+    },
+    {
+      val: "Gastroenterology",
+      name: "Gastroenterology",
+    },
+    {
+      val: "Immunology",
+      name: "Immunology",
+    },
+    {
+      val: "Pulmonology",
+      name: "Pulmonology",
+    },
+    {
+      val: "Orthopedics",
+      name: "Orthopedics",
+    },
+    {
+      val: "Endocrinology",
+      name: "Endocrinology",
+    },
+    {
+      val: "Hepatology",
+      name: "Hepatology",
+    },
+    {
+      val: "Infectious Disease",
+      name: "Infectious Disease",
+    },
+    {
+      val: "Urology",
+      name: "Urology",
+    },
+    {
+      val: "Cardiology",
+      name: "Cardiology",
+    },
+    {
+      val: "General Medicine",
+      name: "General Medicine",
+    },
+    {
+      val: "Rheumatology",
+      name: "Rheumatology",
+    },
+    {
+      val: "Toxicology",
+      name: "Toxicology",
+    },
+    {
+      val: "Vascular Surgery",
+      name: "Vascular Surgery",
+    },
+  ];
+  const locationArr = [
+    {
+      val: "",
+      name: "Select Location (City)",
+    },
+    {
+      val: "kurukshetra",
+      name: "kurukshetra",
+    },
+    {
+      val: "Karnal",
+      name: "Karnal",
+    },
+  ];
   const data = [
     {
       label: "Search By",
@@ -33,26 +113,40 @@ const SearchDoctors = () => {
     },
   ];
 
-  const noInput = [
+  const credientialsData=[
+    
     {
       label: "Location",
-      id: "location",
-      placeholder: "Enter City",
-      inputType: "text",
-      onchange: (event) => {
-        setLocation(event.target.value);
-      },
+      sele: "location",
+      opt: [...locationArr],
     },
     {
       label: "Specilization",
-      id: "specilization",
-      placeholder: "Enter Doctor Specilization",
-      inputType: "text",
-      onchange: (event) => {
-        setSpecilization(event.target.value);
-      },
+      sele: "specilization",
+      opt: [...specilizationArr],
     },
-  ];
+  ]
+
+  // const noInput = [
+  //   {
+  //     label: "Location",
+  //     id: "location",
+  //     placeholder: "Enter City",
+  //     inputType: "text",
+  //     onchange: (event) => {
+  //       setLocation(event.target.value);
+  //     },
+  //   },
+  //   {
+  //     label: "Specilization",
+  //     id: "specilization",
+  //     placeholder: "Enter Doctor Specilization",
+  //     inputType: "text",
+  //     onchange: (event) => {
+  //       setSpecilization(event.target.value);
+  //     },
+  //   },
+  // ];
 
   const btninfo = {
     label: "Search For Doctor",
@@ -69,7 +163,6 @@ const SearchDoctors = () => {
             "Content-Type": "application/json",
           },
         };
-        console.log(doctor_id);
         const { data } = await axios.post(
           `${import.meta.env.VITE_BACKENDURL}/api/v1/user/searchDoctor`,
           {
@@ -80,11 +173,11 @@ const SearchDoctors = () => {
           { withCredentials: true },
           config
         );
-        if (data) {
-          console.dir(data);
+        if (data.length) {
           setUsers(data);
         } else {
-          console.log("Not Found");
+          toast.error("Not Found with Credientials");
+          setUsers([])
         }
       } catch (error) {
         toast.error("Error on Backend Side");
@@ -102,6 +195,7 @@ const SearchDoctors = () => {
             <Option
               key={idx}
               opt={ele}
+              setUsers={setUsers}
               setOption={setSearch_by}
               setDoctor_id={setDoctor_id}
               setLocation={setLocation}
@@ -124,8 +218,8 @@ const SearchDoctors = () => {
           />
         ) : (
           <form>
-            {noInput.map((ele, idx) => {
-              return <InputContainer key={idx} detail={ele} />;
+            {credientialsData.map((ele, idx) => {
+              return <Option key={idx} opt={ele}  setLocation={setLocation} setSpecilization={setSpecilization}/>;
             })}
           </form>
         )}

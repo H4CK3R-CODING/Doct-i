@@ -2,10 +2,11 @@ import React from "react";
 // import { useRecoilState, useRecoilValue } from "recoil";
 // import Atom, { seletedThemeAtom } from "../../Recoil/Atom";
 
-const Option = ({ opt, setOption, setLocation, setDoctor_id, setSpecilization }) => {
+const Option = ({ opt, setUsers,setOption, setLocation, setDoctor_id, setSpecilization}) => {
   // const [sem, setSem] = useRecoilState(Atom.semAtom);
   // const [branch, setBranch] = useRecoilState(Atom.branchAtom);
-  // const theme = useRecoilValue(seletedThemeAtom)
+  //const theme = useRecoilValue(seletedThemeAtom)
+
   const theme = "light"
 
   return (
@@ -21,10 +22,21 @@ const Option = ({ opt, setOption, setLocation, setDoctor_id, setSpecilization })
           console.log("jksjdf");
           console.log(event.target.value);
           // {opt.sele == "sem" ? setSem(event.target.value) : setBranch(event.target.value)};
+          if(opt.sele == "location"){
+            console.log("loc")
+            console.log(location)
+            setLocation?.(event.target.value)
+          }
+          if(opt.sele == "specilization"){
+            setSpecilization?.(event.target.value)
+          }
           setOption?.(event.target.value)
-          setDoctor_id?.("")
-          setLocation?.("")
-          setSpecilization?.("")
+          if(opt.sele == "search_by"){
+            setUsers?.([])
+            setDoctor_id?.("")
+            setLocation?.("")
+            setSpecilization?.("")
+          }
 
         }}
       >
