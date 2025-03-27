@@ -4,11 +4,13 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import Atoms, { userRecoil } from "../../Recoils/Atoms";
 import toast from "react-hot-toast";
 import List from "./List";
+import { useNavigate } from "react-router-dom";
 
 const Mybooking = () => {
   const [loading, setLoading] = useState(true);
   const userId = useRecoilValue(Atoms.userId);
   const [booking, setBooking] = useRecoilState(Atoms.booking);
+  const navigate = useNavigate()
   const getBookings = async () => {
     setLoading(true);
     try {
@@ -57,7 +59,7 @@ const Mybooking = () => {
         <div>
           {booking.map((ele, idx) => {
             return (
-              <div key={idx} className="flex justify-center p-4 ">
+              <div  key={idx} className="flex justify-center cursor-pointer p-4 ">
                 <List bookingDetails={ele}/>
                 {/* <p>
                   {ele?.doctor_id?.name} at {ele?.slot}

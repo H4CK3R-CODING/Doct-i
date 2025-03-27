@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import Atoms from "../../Recoils/Atoms";
 import NavBtn from "./NavBtn";
@@ -9,6 +9,7 @@ const Navbar = () => {
   const [userId, setUserId] = useRecoilState(Atoms.userId);
   const [user, setUser] = useRecoilState(Atoms.userRecoil);
   const [isLoggedIn, setIsLoggedIn] = useRecoilState(Atoms.isLoginIn);
+  const navigate = useNavigate()
   const data = [
     {
       label: "Doctor Register",
@@ -38,13 +39,14 @@ const Navbar = () => {
       dis: `${isLoggedIn ? "block" : "hidden"}`,
       onclick: async () => {
         localStorage.removeItem("token");
+        setIsLoggedIn(false);
+        setUserId("");
+        setUser("");
         await axios.get(
           `${import.meta.env.VITE_BACKENDURL}/api/v1/user/logout`,
           { withCredentials: true }
         );
-        setIsLoggedIn(false);
-        setUserId("");
-        setUser("");
+        navigate("/")
       },
     },
   ];

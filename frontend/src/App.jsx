@@ -14,6 +14,8 @@ import { useRecoilState } from "recoil";
 import { use, useEffect } from "react";
 import Atoms, { isLoginIn, userRecoil } from "./Recoils/Atoms";
 import axios from "axios";
+import DoctorDetails from "./components/Mybooking/DoctorDetails";
+import PatientDetails from "./components/Mybooking/PatientDetails";
 // import isLoggedIn1 from "./Recoil/Recoil";
 
 function App() {
@@ -80,6 +82,8 @@ function App() {
         <Route path="/loginPatient" element={<LoginPatient />}></Route>
         <Route path="/searchDoctors" element={<SearchDoctors />}></Route>
         <Route path="/bookingDoctor" element={<BookDoctor />}></Route>
+        <Route path="/doctordetails" element={<DoctorDetails />}></Route>
+        <Route path="/patientdetails" element={<PatientDetails />}></Route>
         <Route path="*" element={<Page404 />}></Route>
       </Routes>
     </>
