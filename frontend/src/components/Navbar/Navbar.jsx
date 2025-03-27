@@ -1,46 +1,59 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useRecoilState } from "recoil";
+import Atoms from "../../Recoils/Atoms";
+import NavBtn from "./NavBtn";
+import axios from "axios";
 
 const Navbar = () => {
+  const [userId, setUserId] = useRecoilState(Atoms.userId);
+  const [user, setUser] = useRecoilState(Atoms.userRecoil);
+  const [isLoggedIn, setIsLoggedIn] = useRecoilState(Atoms.isLoginIn);
+  const data = [
+    {
+      label: "Doctor Register",
+      to: "/registerDoctor",
+      dis: `${isLoggedIn ? "hidden" : "block"}`,
+    },
+    {
+      label: "Doctor Login",
+      to: "/loginDoctor",
+      dis: `${isLoggedIn ? "hidden" : "block"}`,
+    },
+    {
+      label: "Patient Register",
+      to: "/registerPatient",
+      dis: `${isLoggedIn ? "hidden" : "block"}`,
+    },
+    {
+      label: "Patient Login",
+      to: "/loginPatient",
+      dis: `${isLoggedIn ? "hidden" : "block"}`,
+      // col: "bg-[#008080]"
+    },
+    {
+      label: "Logout",
+      to: "",
+      col: "bg-[#FF5733]",
+      dis: `${isLoggedIn ? "block" : "hidden"}`,
+      onclick: async () => {
+        localStorage.removeItem("token");
+        await axios.get(
+          `${import.meta.env.VITE_BACKENDURL}/api/v1/user/logout`,
+          { withCredentials: true }
+        );
+        setIsLoggedIn(false);
+        setUserId("");
+        setUser("");
+      },
+    },
+  ];
+
   return (
     <div className="flex w-full gap-3 ">
-      <Link
-        className="flex m-2 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-        to={"/registerDoctor"}
-      >
-        Doctor Register
-      </Link>
-      <Link
-        className="flex m-2 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-        to={"/loginDoctor"}
-      >
-        Doctor Login
-      </Link>
-      <Link
-        className="flex m-2 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-        to={"/registerPatient"}
-      >
-        Patient Register
-      </Link>
-      <Link
-        className="flex m-2 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-        to={"/loginPatient"}
-      >
-        Patient Login
-      </Link>
-      <button
-        onClick={async () => {
-          localStorage.removeItem("token");
-          await axios.get(
-            `${import.meta.env.VITE_BACKENDURL}/api/v1/user/logout`,
-            { withCredentials: true }
-          );
-          setIsLoggedIn(false);
-        }}
-        className="flex m-2 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-      >
-        Logout
-      </button>
+      {data.map((ele, idx) => {
+        return <NavBtn list={ele} key={idx} />;
+      })}
     </div>
   );
 };

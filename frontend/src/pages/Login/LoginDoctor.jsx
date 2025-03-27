@@ -6,12 +6,16 @@ import Btn from "../../components/Btn";
 import axios from "axios";
 import toast from "react-hot-toast";
 import Sign from "../../components/Sign/Sign";
+import { useRecoilState } from "recoil";
+import Atoms from "../../Recoils/Atoms";
 
 const LoginDoctor = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [userId, setUserId] = useRecoilState(Atoms.userId)
+  const [user, setUser] = useRecoilState(Atoms.userRecoil)
 
   const noInput = [
     {
@@ -65,7 +69,8 @@ const LoginDoctor = () => {
           toast.success("Successfully Login");
           // setIsLoggedIn(true);
           localStorage.setItem("token", data.jwt);
-
+          setUserId(data.userId)
+          setUser(data.user)
           // console.log(data.jwt)
           // localStorage.setItem("isLoggedIn", {
           //     value: true,

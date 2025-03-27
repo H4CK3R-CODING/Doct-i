@@ -98,6 +98,8 @@ const patientLogin = async (req, res) => {
         return res.status(200).json({
           msg: "Successfully Login",
           jwt: token,
+          userId: isUser._id,
+          user: "Patient"
         });
       }
       return res.status(201).json({

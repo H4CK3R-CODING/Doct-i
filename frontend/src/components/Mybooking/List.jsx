@@ -34,7 +34,7 @@ export default function List({ bookingDetails }) {
             />
             Full-time
           </div>
-          {user == "Patient" ?? (
+          {user === "Patient" ?? (
             <div className="mt-2 flex items-center text-sm text-gray-500">
               <MapPinIcon
                 aria-hidden="true"
