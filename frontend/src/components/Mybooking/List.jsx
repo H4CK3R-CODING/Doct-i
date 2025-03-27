@@ -11,9 +11,12 @@ import {
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { useRecoilValue } from "recoil";
 import { userRecoil } from "../../Recoils/Atoms";
+import { useNavigate } from "react-router-dom";
 
 export default function List({ bookingDetails }) {
   const user = useRecoilValue(userRecoil);
+  const navigate = useNavigate()
+  console.dir(bookingDetails)
   return (
     <div className="shadow-lg w-[80vw] p-4 rounded-md lg:flex lg:items-center lg:justify-between">
       
@@ -58,7 +61,13 @@ export default function List({ bookingDetails }) {
           </div>
         </div>
       </div>
-      <div className="mt-5 flex lg:ml-4 lg:mt-0">
+      <div className="mt-5  flex lg:ml-4 lg:mt-0" onClick={()=>{
+        alert("hel")
+        navigate("/bookingDoctor",{state: {doctor_id: bookingDetails?.doctor_id?._id}});
+        
+        
+
+      }}>
         <span className="hidden sm:block">
           <button
             type="button"

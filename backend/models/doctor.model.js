@@ -42,7 +42,16 @@ const dotorSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  fee:{
+    type: Number,
+    required: true
+  },
   rating:{
+    type: Number,
+    required :false,
+    default: 0
+  },
+  rateUser:{
     type: Number,
     required :false,
     default: 0

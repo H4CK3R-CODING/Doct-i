@@ -8,6 +8,7 @@ const doctorAuth = zod.object({
   experience: zod.number(),
   qualification: zod.string(),
   licence: zod.string().nonempty("Required"),
+  fee: zod.number(),
   password: zod.string(),
   specilization: zod.string(),
   location: zod.string().nonempty("Required"),

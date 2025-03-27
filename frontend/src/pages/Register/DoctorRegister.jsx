@@ -15,6 +15,7 @@ const DoctorRegister = () => {
   const [experience, setExperience] = useState(null);
   const [qualification, setQualification] = useState("");
   const [licence, setLicence] = useState("");
+  const [fee, setFee] = useState(null);
   const [password, setPassword] = useState("");
   const [specilization, setSpecilization] = useState("");
   const [location, setLocation] = useState("");
@@ -84,6 +85,15 @@ const DoctorRegister = () => {
       },
     },
     {
+      label: "Fee",
+      id: "fee",
+      placeholder: "Enter Fee",
+      inputType: "number",
+      onchange: (event) => {
+        setFee(event.target.value);
+      },
+    },
+    {
       label: "Password",
       id: "password",
       placeholder: "Enter Password",
@@ -126,6 +136,7 @@ const DoctorRegister = () => {
           experience == null ||
           qualification == "" ||
           licence == "" ||
+          fee == null ||
           password == "" ||
           specilization == "",
           location == ""
@@ -145,6 +156,7 @@ const DoctorRegister = () => {
         const phoneInt = parseInt(phone);
         const ageInt = parseInt(age);
         const experienceInt = parseInt(experience)
+        const feeInt = parseInt(fee)
         
         const { data } = await axios.post(
           `${import.meta.env.VITE_BACKENDURL}/api/v1/user/doctorRegister`,
@@ -156,6 +168,7 @@ const DoctorRegister = () => {
             experience: experienceInt,
             qualification,
             licence,
+            fee: feeInt,
             password,
             specilization,
             location
