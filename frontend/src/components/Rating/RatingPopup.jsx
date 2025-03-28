@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { StarIcon, XMarkIcon } from "@heroicons/react/24/solid";
+import toast from "react-hot-toast";
 
 const RatingPopup = ({ isOpen, onClose, onSubmit }) => {
   const [rating, setRating] = useState(0);
@@ -13,7 +14,7 @@ const RatingPopup = ({ isOpen, onClose, onSubmit }) => {
 
   const handleSubmit = () => {
     if (rating === 0 || review.trim() === "") {
-      alert("Please provide both rating and review.");
+      toast.error("Please provide both rating and review.");
       return;
     }
     onSubmit({ rating, review });

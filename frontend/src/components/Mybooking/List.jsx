@@ -10,13 +10,64 @@ import {
 } from "@heroicons/react/20/solid";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { useRecoilValue } from "recoil";
-import { userRecoil } from "../../Recoils/Atoms";
+import { userId, userRecoil } from "../../Recoils/Atoms";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import RatingPopup from "../Rating/RatingPopup";
+import toast from "react-hot-toast";
+import axios from "axios";
 
 export default function List({ bookingDetails }) {
+  const [isLoading, setIsLoading] = useState(false);
   const user = useRecoilValue(userRecoil);
+  const userid = useRecoilValue(userId);
   const navigate = useNavigate();
   console.dir(bookingDetails);
+
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+
+  const handleOpenPopup = () => {
+    setIsPopupOpen(true);
+  };
+
+  const handleClosePopup = () => {
+    setIsPopupOpen(false);
+  };
+
+  const handleSubmitRating = async ({ rating, review }) => {
+    try {
+      setIsLoading(true);
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+      const { data } = await axios.post(
+        `${import.meta.env.VITE_BACKENDURL}/api/v1/user/rating`,
+        {
+          rating,
+          review,
+          doctor_id: bookingDetails?.doctor_id?._id,
+          patient_id: userid,
+        },
+        { withCredentials: true },
+        config
+      );
+
+      if (data.msg == "Review added successfully" || data.msg == "Review Updated Successfully") {
+        toast.success(data.msg);
+      } else {
+        toast.error(data.msg);
+      }
+    } catch (error) {
+      // toast.error("Error on Backend Side");
+      // toast.error(error.data.msg);
+      toast.error(error.response.data.msg);
+    } finally {
+      setIsLoading(false);
+    }
+    console.log("Rating submitted:", { rating, review });
+  };
   return (
     <div className="shadow-lg w-[80vw] p-4 rounded-md lg:flex lg:items-center lg:justify-between">
       <div className="min-w-0 flex-1">
@@ -43,7 +94,9 @@ export default function List({ bookingDetails }) {
                 ? bookingDetails?.doctor_id?.location
                 : bookingDetails?.patient_id?.location}
             </div>
-          ): <div/>}
+          ) : (
+            <div />
+          )}
           <div className="mt-2 flex items-center text-sm text-gray-500">
             <CurrencyDollarIcon
               aria-hidden="true"
@@ -63,7 +116,6 @@ export default function List({ bookingDetails }) {
       <div className="mt-5  flex lg:ml-4 lg:mt-0">
         <span
           onClick={() => {
-            alert("hel");
             navigate("/bookingDoctor", {
               state: { doctor_id: bookingDetails?.doctor_id?._id },
             });
@@ -98,12 +150,11 @@ export default function List({ bookingDetails }) {
 
         <span
           onClick={() => {
-            if(user == "Patient"){
+            if (user == "Patient") {
               navigate("/doctordetails", {
                 state: { user: bookingDetails?.doctor_id },
               });
-            }
-            else if(user == "Doctor"){
+            } else if (user == "Doctor") {
               navigate("/patientdetails", {
                 state: { user: bookingDetails?.patient_id },
               });
@@ -121,21 +172,60 @@ export default function List({ bookingDetails }) {
             /> */}
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              fill="none"
               viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              className="-ml-0.5 mr-1.5 size-5 text-red-500"
+              fill="currentColor"
+              class="-ml-0.5 mr-1.5 size-5"
             >
               <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="m20.25 7.5-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5m6 4.125 2.25 2.25m0 0 2.25 2.25M12 13.875l2.25-2.25M12 13.875l-2.25 2.25M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z"
+                fill-rule="evenodd"
+                d="M18.685 19.097A9.723 9.723 0 0 0 21.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 0 0 3.065 7.097A9.716 9.716 0 0 0 12 21.75a9.716 9.716 0 0 0 6.685-2.653Zm-12.54-1.285A7.486 7.486 0 0 1 12 15a7.486 7.486 0 0 1 5.855 2.812A8.224 8.224 0 0 1 12 20.25a8.224 8.224 0 0 1-5.855-2.438ZM15.75 9a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z"
+                clip-rule="evenodd"
               />
             </svg>
             View Profile
           </button>
         </span>
+
+        {/* Popup Component */}
+        <RatingPopup
+          isOpen={isPopupOpen}
+          onClose={handleClosePopup}
+          onSubmit={handleSubmitRating}
+        />
+        {user == "Patient" ? (
+          <span
+            onClick={() => {
+              handleOpenPopup();
+            }}
+            className="ml-3 hidden sm:block"
+          >
+            <button
+              type="button"
+              className="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+            >
+              {/* <LinkIcon
+              aria-hidden="true"
+              className="-ml-0.5 mr-1.5 size-5 text-gray-400"
+            /> */}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className="-ml-0.5 mr-1.5 size-5 text-yellow-300"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              Review
+            </button>
+          </span>
+        ) : (
+          <span></span>
+        )}
+
         <span className="ml-3 hidden sm:block">
           <button
             type="button"

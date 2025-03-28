@@ -12,7 +12,6 @@ const Home = () => {
   const user = useRecoilValue(userRecoil)
   return (
     <div className="text-lg">
-      <Rating/>
       Home
       {/* <DoctorRegister/> */}
       {/* <Sign/> */}

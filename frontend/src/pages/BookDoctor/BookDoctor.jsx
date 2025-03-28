@@ -74,6 +74,7 @@ const BookDoctor = () => {
       );
       if (data.msg == "Booked Successfully") {
         toast.success("Booked Successfully!");
+        navigate("/")
       } else if (data.msg == "Booking Exist") {
         toast.success("Booking Exist");
       } else {

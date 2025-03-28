@@ -137,23 +137,19 @@ const setRating = async (req, res) => {
     if (!success) {
       console.log(error);
       return res.status(400).json({
-        msg: "Something Wrong in Inputs",
+        msg: "Missing required fields",
       });
     }
 
     const { doctor_id, patient_id, rating, review } = req.body;
 
     if (!mongoose.Types.ObjectId.isValid(doctor_id)) {
-      return res.status(400).json({ message: "Invalid Doctor ID" });
-    }
-
-    if (!doctor_id || !patient_id || !rating || !review) {
-      return res.status(400).json({ error: "Missing required fields" });
+      return res.status(400).json({ msg: "Invalid Doctor ID" });
     }
 
     const isDoctor = await Doctor.findById(doctor_id).exec();
     if (!isDoctor) {
-      return res.status(404).json({ error: "Doctor not found" });
+      return res.status(404).json({ msg: "Doctor not found" });
     }
 
     const isReview = await Review.findOneAndUpdate(
