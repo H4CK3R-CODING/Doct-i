@@ -14,15 +14,20 @@ const BookDoctor = () => {
   const [slot, setSlot] = useState("");
   const [file, setFile] = useState(null);
   const [filePreview, setFilePreview] = useState(null);
-  const navigate = useNavigate()
+  const [selectedDate, setSelectedDate] = useState("");
+  const navigate = useNavigate();
 
-  useEffect(()=>{
-    if(doctor_id == ""){
-      toast.error("Select Doctor")
-      navigate("/searchDoctors")
+  useEffect(() => {
+    if (doctor_id == "") {
+      toast.error("Select Doctor");
+      navigate("/searchDoctors");
       return;
     }
-  },[])
+  }, []);
+
+  const handleDateChange = (e) => {
+    setSelectedDate(e.target.value);
+  };
 
   // Handle slot selection
   const handleSlotChange = (e) => {
@@ -44,8 +49,8 @@ const BookDoctor = () => {
       e.preventDefault();
       setIsLoading(true);
 
-      if (!slot) {
-        toast.error("Please select a slot and upload a file.");
+      if (!slot || !selectedDate) {
+        toast.error("Please fill all important fields.");
         return;
       }
 
@@ -58,6 +63,7 @@ const BookDoctor = () => {
       const { data } = await axios.post(
         `${import.meta.env.VITE_BACKENDURL}/api/v1/booking/Doctor`,
         {
+          date: selectedDate,
           slot,
           doctor_id,
           patient_id: userId,
@@ -87,6 +93,19 @@ const BookDoctor = () => {
         className="bg-white shadow-lg rounded-2xl p-8 w-full max-w-md"
       >
         <h2 className="text-2xl font-bold mb-6 text-gray-800">Booking Form</h2>
+        {/* Slot Selection */}
+        <div className="mb-4">
+          <label htmlFor="date" className="block text-gray-700 mb-2">
+            Select Date:
+          </label>
+          <input
+            type="date"
+            id="date"
+            value={selectedDate}
+            onChange={handleDateChange}
+            className="w-full p-2 border rounded-lg"
+          />
+        </div>
 
         {/* Slot Selection */}
         <div className="mb-4">

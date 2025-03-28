@@ -16,7 +16,6 @@ import Atoms, { isLoginIn, userRecoil } from "./Recoils/Atoms";
 import axios from "axios";
 import DoctorDetails from "./components/Mybooking/DoctorDetails";
 import PatientDetails from "./components/Mybooking/PatientDetails";
-import Test from "./components/Test";
 // import isLoggedIn1 from "./Recoil/Recoil";
 
 function App() {
@@ -71,7 +70,6 @@ function App() {
   return (
     <>
       <Navbar />
-      <Test/>
       {user}
       {userId}
       <Toaster position="top-center" />

@@ -10,15 +10,17 @@ const DoctorDetails = () => {
 
   const navigate = useNavigate();
   const [userId, setUserId] = useRecoilState(Atoms.userId);
-  const User = useRecoilValue(userRecoil)
-
-  useEffect(()=>{
+  const User = useRecoilValue(userRecoil);
+  
+  useEffect(() => {
     if (!userId || User !== "Patient") {
+      console.log(userId);
+      console.log(User);
       toast.error("You are not Logged in");
-      navigate("/loginDoctor");
+      navigate("/loginPatient");
       return;
     }
-  },[userId, User])
+  }, [userId, User]);
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-8">
       <div className="bg-white rounded-xl shadow-lg max-w-md w-full">

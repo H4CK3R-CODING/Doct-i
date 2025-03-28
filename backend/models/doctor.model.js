@@ -59,7 +59,11 @@ const dotorSchema = new mongoose.Schema({
   isVerify:{
     type: Boolean,
     default: false
-  }
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 const Doctor = new mongoose.model("Doctor", dotorSchema);

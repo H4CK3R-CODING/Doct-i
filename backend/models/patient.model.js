@@ -30,7 +30,11 @@ const patientSchema = new mongoose.Schema({
     type: String,
     enum: ["male", "female", "other"],
     required: true,
-  }
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 const Patient = new mongoose.model("Patient", patientSchema);
