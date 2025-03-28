@@ -1,21 +1,24 @@
-import React from "react";
+import React, { useEffect } from "react";
 import toast from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useRecoilState } from "recoil";
-import Atoms from "../../Recoils/Atoms";
+import { useRecoilState, useRecoilValue } from "recoil";
+import Atoms, { userRecoil } from "../../Recoils/Atoms";
 
 const DoctorDetails = () => {
   const location = useLocation();
-  const user = location.state.user;
+  const user = location.state?.user;
 
   const navigate = useNavigate();
   const [userId, setUserId] = useRecoilState(Atoms.userId);
+  const User = useRecoilValue(userRecoil)
 
-  if (!userId) {
-    toast.error("You are not Logged in");
-    navigate("/loginDoctor");
-    return;
-  }
+  useEffect(()=>{
+    if (!userId || User !== "Patient") {
+      toast.error("You are not Logged in");
+      navigate("/loginDoctor");
+      return;
+    }
+  },[userId, User])
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-8">
       <div className="bg-white rounded-xl shadow-lg max-w-md w-full">
@@ -31,7 +34,7 @@ const DoctorDetails = () => {
         {/* Profile Details */}
         <div className="mt-8 p-6 text-center">
           <h2 className="text-xl font-bold text-gray-800 flex items-center justify-center">
-            {user.name}
+            {user?.name}
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
@@ -45,7 +48,7 @@ const DoctorDetails = () => {
               />
             </svg>
           </h2>
-          <p className="text-gray-600">{user.gmail}</p>
+          <p className="text-gray-600">{user?.gmail}</p>
 
           {/* Info Section */}
           <div className="mt-4 space-y-3 text-left text-gray-600">

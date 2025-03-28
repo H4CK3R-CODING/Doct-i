@@ -62,7 +62,7 @@ function App() {
 
   useEffect(() => {
     checkLoggedIn();
-  }, [isLoggedIn, user]);
+  }, [isLoggedIn, user, userId]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
