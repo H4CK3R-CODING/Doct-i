@@ -17,7 +17,19 @@
           "dest": "/"
       },
       {
-          "src":"/loginPatient",
+          "src":"/searchDoctors",
+          "dest": "/"
+      },
+      {
+          "src":"/bookingDoctor",
+          "dest": "/"
+      },
+      {
+          "src":"/doctordetails",
+          "dest": "/"
+      },
+      {
+          "src":"/patientdetails",
           "dest": "/"
       }
   ]

@@ -15,6 +15,7 @@ const SearchDoctors = () => {
   const [location, setLocation] = useState("");
   const [specilization, setSpecilization] = useState("");
   const [users, setUsers] = useState([]);
+  
 
   const specilizationArr = [
     {

@@ -37,6 +37,12 @@ const Navbar = () => {
       // col: "bg-[#008080]"
     },
     {
+      label: "Seatch Doctors",
+      to: "/searchDoctors",
+      // dis: `${isLoggedIn ? "hidden" : "block"}`,
+      // col: "bg-[#008080]"
+    },
+    {
       label: "Logout",
       to: "",
       col: "bg-[#FF5733]",

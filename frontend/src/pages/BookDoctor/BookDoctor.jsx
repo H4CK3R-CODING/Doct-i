@@ -1,7 +1,7 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import Atoms from "../../Recoils/Atoms";
 import Loading from "../../components/Loading";
@@ -9,11 +9,20 @@ import Loading from "../../components/Loading";
 const BookDoctor = () => {
   const [isLoading, setIsLoading] = useState(false);
   const location = useLocation();
-  const doctor_id = location.state.doctor_id.toString();
+  const doctor_id = location.state?.doctor_id?.toString() || "";
   const userId = useRecoilValue(Atoms.userId);
   const [slot, setSlot] = useState("");
   const [file, setFile] = useState(null);
   const [filePreview, setFilePreview] = useState(null);
+  const navigate = useNavigate()
+
+  useEffect(()=>{
+    if(doctor_id == ""){
+      toast.error("Select Doctor")
+      navigate("/searchDoctors")
+      return;
+    }
+  },[])
 
   // Handle slot selection
   const handleSlotChange = (e) => {
