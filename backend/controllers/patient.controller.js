@@ -5,8 +5,9 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import patientAuth from "../zod/patientAuth.js";
 import ratingAuth from "../zod/ratingAuth.js";
-import Doctor from "../models/doctor.model.js";
 import mongoose from "mongoose";
+import Review from "../models/Review.js";
+import Doctor from "../models/doctor.model.js";
 
 const patientRegister = async (req, res) => {
   try {
@@ -140,67 +141,62 @@ const setRating = async (req, res) => {
       });
     }
 
-    const { doctor_id, patient_id, rating } = req.body;
+    const { doctor_id, patient_id, rating, review } = req.body;
+
     if (!mongoose.Types.ObjectId.isValid(doctor_id)) {
       return res.status(400).json({ message: "Invalid Doctor ID" });
     }
-    //const isDoctor = await Doctor.findById(doctor_id);
 
-    // const totalRating = isDoctor.rating * isDoctor.reviews;
-    // const averageRating = (totalRating + rating) / (isDoctor.reviews + 1);
+    if (!doctor_id || !patient_id || !rating || !review) {
+      return res.status(400).json({ error: "Missing required fields" });
+    }
 
-    const isDoctor = await Doctor.findByIdAndUpdate(
+    const isDoctor = await Doctor.findById(doctor_id).exec();
+    if (!isDoctor) {
+      return res.status(404).json({ error: "Doctor not found" });
+    }
+
+    const isReview = await Review.findOneAndUpdate(
+      { doctor_id, patient_id },
+      {
+        $set: {
+          rating: rating,
+          review: review,
+        },
+      },
+      { upsert: true, returnDocument: "before" }
+    ).exec();
+
+    // if(!isReview.upserted){
+    //   return res.status(200).json({
+    //     msg: "Review Updated Successfully"
+    //   })
+    // }
+    
+    if (isReview) {
+      return res.status(200).json({
+        msg: "Review Updated Successfully",
+      });
+    }
+
+    const newTotalReviews = isDoctor.totalReviews + 1;
+    const newAverageRating = (
+      (isDoctor.avgRating * isDoctor.totalReviews + rating) /
+      newTotalReviews
+    ).toFixed(1);
+
+    await Doctor.findByIdAndUpdate(
       doctor_id,
-      [
-        {
-          $set: {
-            rating: {
-              $round: [
-                {
-                  $divide: [
-                    { $add: [rating, { $multiply: ["$rating", "$reviews"] }] },
-                    { $add: ["$reviews", 1] }
-                  ]
-                },
-                1  // Round to 1 decimal place
-              ]
-            }
-          }
-        },
-        {
-          $set: { reviews: { $add: ["$reviews", 1] } }, // Increment reviews by 1
-        },
-      ],
+      {
+        avgRating: newAverageRating,
+        totalReviews: newTotalReviews,
+      },
       { new: true }
     );
 
-
-    // const totalRating = isDoctor.rating * isDoctor.reviews;
-    // const averageRating = (totalRating+rating)/(isDoctor.reviews + 1)
-
-    // const isSetRating = await Doctor.findByIdAndUpdate(
-    //   doctor_id,
-    //   {
-    //     rating: averageRating.toFixed(1),
-    //     reviews: isDoctor.reviews + 1
-    //   },
-    //   { new: true }
-    // );
-
-    // isSetRating = {}
-    // console.log(isDoctor);
-
-
-    if(!isDoctor){
-      return res.status(404).json({
-        msg: "Review not Added",
-      });
-    }
-    
     return res.status(200).json({
       msg: "Review added successfully",
     });
-
   } catch (error) {
     console.log("Error in setRating controller", error.message);
     res.status(501).json({ error: "Internal Server Error" });

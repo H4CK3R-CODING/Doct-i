@@ -6,11 +6,13 @@ import List from "../components/Mybooking/List";
 import Bookings from "../components/Mybooking/Bookings";
 import { useRecoilValue } from "recoil";
 import { userRecoil } from "../Recoils/Atoms";
+import Rating from "../components/Rating/Rating";
 
 const Home = () => {
   const user = useRecoilValue(userRecoil)
   return (
     <div className="text-lg">
+      <Rating/>
       Home
       {/* <DoctorRegister/> */}
       {/* <Sign/> */}
