@@ -4,6 +4,9 @@ import signAuth from "../zod/signAuth.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import patientAuth from "../zod/patientAuth.js";
+import ratingAuth from "../zod/ratingAuth.js";
+import Doctor from "../models/doctor.model.js";
+import mongoose from "mongoose";
 
 const patientRegister = async (req, res) => {
   try {
@@ -99,7 +102,7 @@ const patientLogin = async (req, res) => {
           msg: "Successfully Login",
           jwt: token,
           userId: isUser._id,
-          user: "Patient"
+          user: "Patient",
         });
       }
       return res.status(201).json({
@@ -110,20 +113,98 @@ const patientLogin = async (req, res) => {
       msg: "You are not Registered!",
     });
   } catch (error) {
-    console.log("Error occure in the patient.controller.js ===> " + error.message);
+    console.log(
+      "Error occure in the patient.controller.js ===> " + error.message
+    );
   }
 };
 
-const logout = (req,res) =>{
-
+const logout = (req, res) => {
   try {
-      res.cookie("jwt", "", { maxAge: 0 });
-      res.status(201).json({ message: "Logged out successfully." });
+    res.cookie("jwt", "", { maxAge: 0 });
+    res.status(201).json({ message: "Logged out successfully." });
   } catch (error) {
-      console.log("Error in login controller", error.message);
-      res.status(501).json({ error: "Internal Server Error" });
+    console.log("Error in login controller", error.message);
+    res.status(501).json({ error: "Internal Server Error" });
   }
+};
 
-}
+const setRating = async (req, res) => {
+  try {
+    const { success, error } = ratingAuth.safeParse(req.body);
 
-export { patientRegister, patientLogin , logout};
+    if (!success) {
+      console.log(error);
+      return res.status(400).json({
+        msg: "Something Wrong in Inputs",
+      });
+    }
+
+    const { doctor_id, patient_id, rating } = req.body;
+    if (!mongoose.Types.ObjectId.isValid(doctor_id)) {
+      return res.status(400).json({ message: "Invalid Doctor ID" });
+    }
+    //const isDoctor = await Doctor.findById(doctor_id);
+
+    // const totalRating = isDoctor.rating * isDoctor.reviews;
+    // const averageRating = (totalRating + rating) / (isDoctor.reviews + 1);
+
+    const isDoctor = await Doctor.findByIdAndUpdate(
+      doctor_id,
+      [
+        {
+          $set: {
+            rating: {
+              $round: [
+                {
+                  $divide: [
+                    { $add: [rating, { $multiply: ["$rating", "$reviews"] }] },
+                    { $add: ["$reviews", 1] }
+                  ]
+                },
+                1  // Round to 1 decimal place
+              ]
+            }
+          }
+        },
+        {
+          $set: { reviews: { $add: ["$reviews", 1] } }, // Increment reviews by 1
+        },
+      ],
+      { new: true }
+    );
+
+
+    // const totalRating = isDoctor.rating * isDoctor.reviews;
+    // const averageRating = (totalRating+rating)/(isDoctor.reviews + 1)
+
+    // const isSetRating = await Doctor.findByIdAndUpdate(
+    //   doctor_id,
+    //   {
+    //     rating: averageRating.toFixed(1),
+    //     reviews: isDoctor.reviews + 1
+    //   },
+    //   { new: true }
+    // );
+
+    // isSetRating = {}
+    // console.log(isDoctor);
+
+
+    if(!isDoctor){
+      return res.status(404).json({
+        msg: "Review not Added",
+      });
+    }
+    
+    return res.status(200).json({
+      msg: "Review added successfully",
+    });
+
+  } catch (error) {
+    console.log("Error in setRating controller", error.message);
+    res.status(501).json({ error: "Internal Server Error" });
+  }
+};
+
+export { patientRegister, patientLogin, logout, setRating };
