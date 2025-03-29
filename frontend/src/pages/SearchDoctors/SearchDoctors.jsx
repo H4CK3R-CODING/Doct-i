@@ -229,7 +229,7 @@ const SearchDoctors = () => {
               key={idx}
               opt={ele}
               setUsers={setUsers}
-              setOption={setSearch_by}
+              setSearch_by={setSearch_by}
               setDoctor_id={setDoctor_id}
               setLocation={setLocation}
               setSpecilization={setSpecilization}

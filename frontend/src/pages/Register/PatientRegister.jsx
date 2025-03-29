@@ -234,7 +234,7 @@ const DoctorRegister = () => {
             return <InputContainer key={idx} detail={ele} />;
           })}
           {data.map((ele, idx) => {
-            return <Option key={idx} opt={ele}  setOption={setGender} setLocation={setLocation} />;
+            return <Option key={idx} opt={ele}  setGender={setGender} setLocation={setLocation} />;
           })}
           {isLoading ? <Loading /> : <Btn btninfo={btninfo} />}
         </form>

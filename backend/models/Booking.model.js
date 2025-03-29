@@ -19,6 +19,11 @@ const BookingSchema = new mongoose.Schema({
     ref: "Patient",
     required: true,
   },
+  reason: {
+    type: String,
+    required: false,
+    default: ""
+  },
   reportfile: {
     type: String,
     required: false,

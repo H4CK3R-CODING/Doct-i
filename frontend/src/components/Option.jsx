@@ -2,7 +2,7 @@ import React from "react";
 // import { useRecoilState, useRecoilValue } from "recoil";
 // import Atom, { seletedThemeAtom } from "../../Recoil/Atom";
 
-const Option = ({ opt, setUsers,setOption, setLocation, setDoctor_id, setSpecilization}) => {
+const Option = ({ opt, setUsers, setSearch_by, setLocation, setDoctor_id, setSpecilization}) => {
   // const [sem, setSem] = useRecoilState(Atom.semAtom);
   // const [branch, setBranch] = useRecoilState(Atom.branchAtom);
   //const theme = useRecoilValue(seletedThemeAtom)
@@ -30,7 +30,13 @@ const Option = ({ opt, setUsers,setOption, setLocation, setDoctor_id, setSpecili
           if(opt.sele == "specilization"){
             setSpecilization?.(event.target.value)
           }
-          setOption?.(event.target.value)
+          if(opt.sele == "gender"){
+            setGender?.(event.target.value)
+          }
+          if(opt.sele == "search_by"){
+            setSearch_by?.(event.target.value)
+          }
+          // setOption?.(event.target.value)
           if(opt.sele == "search_by"){
             setUsers?.([])
             setDoctor_id?.("")
