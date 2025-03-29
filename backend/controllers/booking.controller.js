@@ -22,7 +22,7 @@ const bookingDoctor = async (req, res) => {
       });
       return;
     }
-    
+
     const isBooking = await Booking.findOneAndUpdate(
       { doctor_id, patient_id },
       { $set: { date, slot, reportfile } },
@@ -55,13 +55,16 @@ const cancelBookingByDoctor = async (req, res) => {
       return res.status(400).json({ msg: "Invalid Booking ID" });
     }
 
-    const isBooking = await Booking.findByIdAndUpdate({ _id: id }, { 
-      $set:{
-        reason: reason,
-        status: "cancelled"
+    const isBooking = await Booking.findByIdAndUpdate(
+      { _id: id },
+      {
+        $set: {
+          reason: reason,
+          status: "cancelled",
+        },
       }
-     });
-    
+    );
+
     if (!isBooking) {
       return res.status(404).json({
         msg: "Booking Doesn't Exist",
@@ -88,7 +91,7 @@ const cancelBookingByPatient = async (req, res) => {
     }
 
     const isBooking = await Booking.findByIdAndDelete({ _id: id });
-    
+
     if (!isBooking) {
       return res.status(404).json({
         msg: "Booking Doesn't Exist",
@@ -115,7 +118,10 @@ const getBookingByDoctor = async (req, res) => {
         msg: "User not Logged In",
       });
     }
-    const bookings = await Booking.find({ doctor_id: doctorId, status: { $ne: "cancelled" } })
+    const bookings = await Booking.find({
+      doctor_id: doctorId,
+      status: { $ne: "cancelled" },
+    })
       .populate(["doctor_id", "patient_id"])
       .exec();
     return res.status(200).send(bookings);
@@ -147,10 +153,42 @@ const getBookingByPatient = async (req, res) => {
   }
 };
 
+const patientExamined = async (req, res) => {
+  try {
+    const { id } = req.query;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ msg: "Invalid Booking ID" });
+    }
+
+    const isBooking = await Booking.findByIdAndUpdate({ _id: id },{
+      $set: {
+        status: "completed"
+      }
+    });
+
+    if (!isBooking) {
+      return res.status(404).json({
+        msg: "Booking Doesn't Exist",
+      });
+    }
+
+    return res.status(201).json({
+      msg: "Examined Successfully",
+      isBooking,
+    });
+  } catch (error) {
+    console.log(
+      "Error occure in the bookingDoctor.controller.js ===> " + error.message
+    );
+  }
+};
+
 export {
   bookingDoctor,
   getBookingByDoctor,
   getBookingByPatient,
   cancelBookingByDoctor,
-  cancelBookingByPatient
+  cancelBookingByPatient,
+  patientExamined,
 };

@@ -116,7 +116,6 @@ export default function List({ bookingDetails, setAppointments }) {
   };
 
   const handleCancelButtonByPatient = async () => {
-    console.log("dele");
     try {
       setIsLoading(true);
       const config = {
@@ -132,14 +131,50 @@ export default function List({ bookingDetails, setAppointments }) {
         config
       );
 
-      setBookings((curr) =>
-        curr.filter((appt) => appt._id !== bookingDetails?._id)
-      );
+      // setBookings((curr) =>
+      //   curr.filter((appt) => appt._id !== bookingDetails?._id)
+      // );
       if (data) {
         setBookings((curr) =>
           curr.filter((appt) => appt._id !== bookingDetails?._id)
         );
         toast.success(data.msg);
+      }
+    } catch (error) {
+      toast.error(error.response.data.msg);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleExamined = async () => {
+    try {
+      setIsLoading(true);
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+      const { data } = await axios.get(
+        `${
+          import.meta.env.VITE_BACKENDURL
+        }/api/v1/booking/patientExamined?id=${bookingDetails?._id}`,
+        { withCredentials: true },
+        config
+      );
+
+      if (data) {
+        // bookingDetails?.status = "completed";
+        setAppointments((curr) =>
+          curr.map((appointment) =>
+            appointment._id === bookingDetails?._id
+              ? { ...appointment, status: "completed" }  // Update status
+              : appointment
+          )
+        );
+        toast.success(data.msg);
+      } else {
+        toast.success("Response not comes");
       }
     } catch (error) {
       toast.error(error.response.data.msg);
@@ -255,15 +290,21 @@ export default function List({ bookingDetails, setAppointments }) {
               {user == "Patient" ? bookingDetails?.slot : bookingDetails?.slot}
             </div>
           </div>
-          {bookingDetails?.reason ? <p className="text-wrap truncate text-base overflow-hidden">
-            <span className="text-red-500 font-medium">Reason (Booking Cancel) : </span>
-            <span className="truncate mt-4 text-red- font- text-wrap">
-              {bookingDetails?.reason}
-            </span>
-          </p> : ""}
+          {bookingDetails?.reason && user == "Patient" ? (
+            <p className="text-wrap truncate text-base overflow-hidden">
+              <span className="text-red-500 font-medium">
+                Reason (Booking Cancel) :{" "}
+              </span>
+              <span className="truncate mt-4 text-red- font- text-wrap">
+                {bookingDetails?.reason}
+              </span>
+            </p>
+          ) : (
+            ""
+          )}
         </div>
         <div className="mt-5  flex lg:ml-4 lg:mt-0">
-          {user == "Patient" ? (
+          {user == "Patient" && bookingDetails?.status !== "completed" ? (
             <span
               onClick={() => {
                 navigate("/bookingDoctor", {
@@ -379,8 +420,6 @@ export default function List({ bookingDetails, setAppointments }) {
             <span></span>
           )}
 
-          {user == "Patient" ? handleCancelButtonByDoctor : handleSubmit}
-
           <RatingPopup
             cancel={"cancel"}
             isOpen={openPopupCancel}
@@ -391,7 +430,7 @@ export default function List({ bookingDetails, setAppointments }) {
                 : handleCancelButtonByDoctor
             }
           />
-          <span
+          {bookingDetails?.status !== "completed"? <span
             onClick={() => {
               handleOpenPopupCancel();
             }}
@@ -421,17 +460,24 @@ export default function List({ bookingDetails, setAppointments }) {
               </svg>
               Cancel
             </button>
-          </span>
+          </span> : ""}
 
-          <span className="sm:ml-3">
-            <button
-              type="button"
-              className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              <CheckIcon aria-hidden="true" className="-ml-0.5 mr-1.5 size-5" />
-              Verify
-            </button>
-          </span>
+          {user !== "Patient" && bookingDetails?.status !=="completed" ? (
+            <span onClick={handleExamined} className="sm:ml-3">
+              <button
+                type="button"
+                className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              >
+                <CheckIcon
+                  aria-hidden="true"
+                  className="-ml-0.5 mr-1.5 size-5"
+                />
+                Examined
+              </button>
+            </span>
+          ) : (
+            ""
+          )}
 
           {/* Dropdown */}
           <Menu as="div" className="relative ml-3 sm:hidden">

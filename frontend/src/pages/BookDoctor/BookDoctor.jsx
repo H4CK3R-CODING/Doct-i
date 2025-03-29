@@ -87,6 +87,9 @@ const BookDoctor = () => {
     }
   };
 
+  // Get current date in YYYY-MM-DD format
+  const today = new Date().toISOString().split("T")[0];
+
   return (
     <div className="my-4 bg-gray-100 flex justify-center items-center">
       <form
@@ -104,6 +107,7 @@ const BookDoctor = () => {
             id="date"
             value={selectedDate}
             onChange={handleDateChange}
+            min={today}
             className="w-full p-2 border rounded-lg"
           />
         </div>
