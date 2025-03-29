@@ -89,12 +89,44 @@ const SearchDoctors = () => {
       name: "Select Location (City)",
     },
     {
-      val: "kurukshetra",
-      name: "kurukshetra",
+      val: "Hyderabad",
+      name: "Hyderabad",
     },
     {
-      val: "Karnal",
-      name: "Karnal",
+      val: "Mumbai",
+      name: "Mumbai",
+    },
+    {
+      val: "Pune",
+      name: "Pune",
+    },
+    {
+      val: "Bangalore",
+      name: "Bangalore",
+    },
+    {
+      val: "Kolkata",
+      name: "Kolkata",
+    },
+    {
+      val: "Jaipur",
+      name: "Jaipur",
+    },
+    {
+      val: "Chennai",
+      name: "Chennai",
+    },
+    {
+      val: "Ahmedabad",
+      name: "Ahmedabad",
+    },
+    {
+      val: "Lucknow",
+      name: "Lucknow",
+    },
+    {
+      val: "Delhi",
+      name: "Delhi",
     },
   ];
   const data = [

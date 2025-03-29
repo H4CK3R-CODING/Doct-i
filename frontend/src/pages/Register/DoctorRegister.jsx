@@ -5,6 +5,7 @@ import Btn from "../../components/Btn";
 import toast from "react-hot-toast";
 import axios from "axios";
 import validateEmail from "../../../utils/validateEmail";
+import Option from "../../components/Option";
 
 const DoctorRegister = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -19,6 +20,7 @@ const DoctorRegister = () => {
   const [password, setPassword] = useState("");
   const [specilization, setSpecilization] = useState("");
   const [location, setLocation] = useState("");
+  
 
   const noInput = [
     {
@@ -102,24 +104,24 @@ const DoctorRegister = () => {
         setPassword(event.target.value);
       },
     },
-    {
-      label: "Specilization",
-      id: "specilization",
-      placeholder: "Enter Specilization",
-      inputType: "text",
-      onchange: (event) => {
-        setSpecilization(event.target.value);
-      },
-    },
-    {
-      label: "City",
-      id: "location",
-      placeholder: "Enter City Location",
-      inputType: "text",
-      onchange: (event) => {
-        setLocation(event.target.value);
-      },
-    },
+    // {
+    //   label: "Specilization",
+    //   id: "specilization",
+    //   placeholder: "Enter Specilization",
+    //   inputType: "text",
+    //   onchange: (event) => {
+    //     setSpecilization(event.target.value);
+    //   },
+    // },
+    // {
+    //   label: "City",
+    //   id: "location",
+    //   placeholder: "Enter City Location",
+    //   inputType: "text",
+    //   onchange: (event) => {
+    //     setLocation(event.target.value);
+    //   },
+    // },
   ];
 
   const btninfo = {
@@ -193,6 +195,133 @@ const DoctorRegister = () => {
       }
     },
   };
+
+  const specilizationArr = [
+    {
+      val: "",
+      name: "Choose Specilization",
+    },
+    {
+      val: "Dermatology",
+      name: "Dermatology",
+    },
+    {
+      val: "Neurology",
+      name: "Neurology",
+    },
+    {
+      val: "Gastroenterology",
+      name: "Gastroenterology",
+    },
+    {
+      val: "Immunology",
+      name: "Immunology",
+    },
+    {
+      val: "Pulmonology",
+      name: "Pulmonology",
+    },
+    {
+      val: "Orthopedics",
+      name: "Orthopedics",
+    },
+    {
+      val: "Endocrinology",
+      name: "Endocrinology",
+    },
+    {
+      val: "Hepatology",
+      name: "Hepatology",
+    },
+    {
+      val: "Infectious Disease",
+      name: "Infectious Disease",
+    },
+    {
+      val: "Urology",
+      name: "Urology",
+    },
+    {
+      val: "Cardiology",
+      name: "Cardiology",
+    },
+    {
+      val: "General Medicine",
+      name: "General Medicine",
+    },
+    {
+      val: "Rheumatology",
+      name: "Rheumatology",
+    },
+    {
+      val: "Toxicology",
+      name: "Toxicology",
+    },
+    {
+      val: "Vascular Surgery",
+      name: "Vascular Surgery",
+    },
+  ];
+  const locationArr = [
+    {
+      val: "",
+      name: "Select Location (City)",
+    },
+    {
+      val: "Hyderabad",
+      name: "Hyderabad",
+    },
+    {
+      val: "Mumbai",
+      name: "Mumbai",
+    },
+    {
+      val: "Pune",
+      name: "Pune",
+    },
+    {
+      val: "Bangalore",
+      name: "Bangalore",
+    },
+    {
+      val: "Kolkata",
+      name: "Kolkata",
+    },
+    {
+      val: "Jaipur",
+      name: "Jaipur",
+    },
+    {
+      val: "Chennai",
+      name: "Chennai",
+    },
+    {
+      val: "Ahmedabad",
+      name: "Ahmedabad",
+    },
+    {
+      val: "Lucknow",
+      name: "Lucknow",
+    },
+    {
+      val: "Delhi",
+      name: "Delhi",
+    },
+  ];
+
+  const credientialsData=[
+    
+    {
+      label: "Location",
+      sele: "location",
+      opt: [...locationArr],
+    },
+    {
+      label: "Specilization",
+      sele: "specilization",
+      opt: [...specilizationArr],
+    },
+  ]
   return (
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-1 lg:px-8">
@@ -211,6 +340,9 @@ const DoctorRegister = () => {
           {noInput.map((ele, idx) => {
             return <InputContainer key={idx} detail={ele} />;
           })}
+          {credientialsData.map((ele, idx) => {
+              return <Option key={idx} opt={ele}  setLocation={setLocation} setSpecilization={setSpecilization}/>;
+            })}
           {/* {data.map((ele, idx) => {
             return <Option key={idx} opt={ele} />;
           })} */}
