@@ -10,7 +10,6 @@ const Bookings = () => {
   const userId = useRecoilValue(Atoms.userId);
   const [appointments, setAppointments] = useRecoilState(Atoms.appointments);
   const getBookings = async () => {
-    toast.error("Rerender")
     setLoading(true);
     try {
       const config = {
@@ -35,7 +34,7 @@ const Bookings = () => {
 
       if (data) {
         setAppointments(data);
-        // console.dir(data)
+        console.dir(data)
       } else {
         console.log("Not Booking");
       }
@@ -59,7 +58,7 @@ const Bookings = () => {
           {appointments.map((ele, idx) => {
             return (
               <div key={idx} className="flex justify-center p-4 ">
-                <List bookingDetails={ele} setAppointments={setAppointments}/>
+                <List bookingDetails={ele}/>
                 {/* <p>
                   {ele?.doctor_id?.name} at {ele?.slot}
                 </p>

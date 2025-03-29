@@ -11,11 +11,12 @@ import Navbar from "./components/Navbar/Navbar";
 import SearchDoctors from "./pages/SearchDoctors/SearchDoctors";
 import BookDoctor from "./pages/BookDoctor/BookDoctor";
 import { useRecoilState } from "recoil";
-import { use, useEffect } from "react";
+import { useEffect } from "react";
 import Atoms, { isLoginIn, userRecoil } from "./Recoils/Atoms";
 import axios from "axios";
 import DoctorDetails from "./components/Mybooking/DoctorDetails";
 import PatientDetails from "./components/Mybooking/PatientDetails";
+import Dashboard from "./pages/Dashboard/Dashboard";
 // import isLoggedIn1 from "./Recoil/Recoil";
 
 function App() {
@@ -55,9 +56,9 @@ function App() {
     }
   };
 
-  useEffect(() => {
-    checkLoggedIn();
-  }, []);
+  // useEffect(() => {
+  //   checkLoggedIn();
+  // }, []);
 
   useEffect(() => {
     checkLoggedIn();
@@ -75,6 +76,7 @@ function App() {
       <Toaster position="top-center" />
       <Routes>
         <Route path="/" element={<Home />}></Route>
+        {/* <Route path="/dashboard" element={<Dashboard />}></Route> */}
         {/* <Route path="/signin" element={<SignIn />}></Route> */}
         <Route path="/registerDoctor" element={<DoctorRegister />}></Route>
         <Route path="/registerPatient" element={<PatientRegister />}></Route>

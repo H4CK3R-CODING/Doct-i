@@ -11,18 +11,19 @@ import {
 } from "@heroicons/react/20/solid";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { booking, userId, userRecoil } from "../../Recoils/Atoms";
+import Atoms, { booking, userId, userRecoil } from "../../Recoils/Atoms";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import RatingPopup from "../Rating/RatingPopup";
 import toast from "react-hot-toast";
 import axios from "axios";
 
-export default function List({ bookingDetails, setAppointments }) {
+export default function List({ bookingDetails }) {
   const [isLoading, setIsLoading] = useState(false);
   const user = useRecoilValue(userRecoil);
   const userid = useRecoilValue(userId);
   const setBookings = useSetRecoilState(booking);
+  const setAppointments = useSetRecoilState(Atoms.appointments)
   const navigate = useNavigate();
   // console.dir(bookingDetails);
 
@@ -187,7 +188,7 @@ export default function List({ bookingDetails, setAppointments }) {
     <div>
       <div
         className={`shadow-lg w-[80vw] p-4 rounded-md lg:flex lg:items-center lg:justify-between ${
-          bookingDetails?.status == "cancelled" ? "hidden" : "block"
+          bookingDetails?.status == "cancelled" && user!="Patient" ? "hidden" : "block"
         }`}
       >
         <div className="min-w-0 flex-1">
