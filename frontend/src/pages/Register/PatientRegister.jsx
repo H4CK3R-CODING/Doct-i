@@ -16,6 +16,55 @@ const DoctorRegister = () => {
   const [disease, setDisease] = useState("");
   const [password, setPassword] = useState("");
   const [gender, setGender] = useState("male");
+  const [location, setLocation] = useState("");
+
+
+  const locationArr = [
+    {
+      val: "",
+      name: "Select Location (City)",
+    },
+    {
+      val: "Hyderabad",
+      name: "Hyderabad",
+    },
+    {
+      val: "Mumbai",
+      name: "Mumbai",
+    },
+    {
+      val: "Pune",
+      name: "Pune",
+    },
+    {
+      val: "Bangalore",
+      name: "Bangalore",
+    },
+    {
+      val: "Kolkata",
+      name: "Kolkata",
+    },
+    {
+      val: "Jaipur",
+      name: "Jaipur",
+    },
+    {
+      val: "Chennai",
+      name: "Chennai",
+    },
+    {
+      val: "Ahmedabad",
+      name: "Ahmedabad",
+    },
+    {
+      val: "Lucknow",
+      name: "Lucknow",
+    },
+    {
+      val: "Delhi",
+      name: "Delhi",
+    },
+  ];
 
   const noInput = [
     {
@@ -87,7 +136,8 @@ const DoctorRegister = () => {
           age == null ||
           disease == "" ||
           password == "" ||
-          gender == ""
+          gender == "" || 
+          location == ""
         ) {
           toast.error("Please Fill Up Important Details");
           return;
@@ -113,6 +163,7 @@ const DoctorRegister = () => {
             disease,
             password,
             gender,
+            location
           },
           { withCredentials: true },
           config
@@ -154,6 +205,11 @@ const DoctorRegister = () => {
         },
       ],
     },
+    {
+      label: "Location",
+      sele: "location",
+      opt: [...locationArr],
+    },
   ];
 
   return (
@@ -178,7 +234,7 @@ const DoctorRegister = () => {
             return <InputContainer key={idx} detail={ele} />;
           })}
           {data.map((ele, idx) => {
-            return <Option key={idx} opt={ele}  setOption={setGender} />;
+            return <Option key={idx} opt={ele}  setOption={setGender} setLocation={setLocation} />;
           })}
           {isLoading ? <Loading /> : <Btn btninfo={btninfo} />}
         </form>

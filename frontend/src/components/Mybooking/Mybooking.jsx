@@ -34,14 +34,14 @@ const Mybooking = () => {
         config
       );
 
-      return data;
+      // return data;
 
-      // if (data) {
-      //   setBooking(data);
-      //   console.dir(data)
-      // } else {
-      //   console.log("Not Booking");
-      // }
+      if (data) {
+        setBooking(data);
+        console.dir(data)
+      } else {
+        console.log("Not Booking");
+      }
     } catch (error) {
       toast.error("Error on Backend Side");
     } finally {
@@ -50,18 +50,18 @@ const Mybooking = () => {
   };
 
   useEffect(() => {
-    // getBookings();
-    toast.promise(getBookings(), {
-      loading: "Fetching Bookings...",
-      success: (data) => {
-        setBooking(data);          // Set bookings on success
-        return `Bookings Retrieved`;
-      },
-      error: (err) => {
-        console.error(err);
-        return "Failed to fetch Bookings";
-      }
-    });
+    getBookings();
+    // toast.promise(getBookings(), {
+    //   loading: "Fetching Bookings...",
+    //   success: (data) => {
+    //     setBooking(data);          
+    //     return `Bookings Retrieved`;
+    //   },
+    //   error: (err) => {
+    //     console.error(err);
+    //     return "Failed to fetch Bookings";
+    //   }
+    // });
   }, [userId]);
 
   return (

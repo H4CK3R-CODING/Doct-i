@@ -80,8 +80,11 @@ const doctorRegister = async (req, res) => {
     });
   } catch (error) {
     console.log(
-      "error occur in the doctor.controller.js ===> " + error.message
+      "error occur in the doctor.controller.js ===> " + error
     );
+    return res.status(400).json({
+      msg: "Error on Backend side"
+    })
   }
 };
 

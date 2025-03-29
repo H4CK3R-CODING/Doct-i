@@ -4,6 +4,9 @@ import { FaMale, FaFemale } from "react-icons/fa";
 import Atoms, { userRecoil } from "../../Recoils/Atoms";
 import { useRecoilState, useRecoilValue } from "recoil";
 import toast from "react-hot-toast";
+import {
+  MapPinIcon,
+} from "@heroicons/react/20/solid";
 
 const PatientDetails = () => {
   const location = useLocation();
@@ -24,9 +27,9 @@ const PatientDetails = () => {
         {/* Header */}
         <div className="bg-orange-100 h-24 rounded-t-xl relative">
           <img
-            src={"./doctor.png"}
+            src={"./user-profile.png"}
             alt="Profile"
-            className="w-24 h-24 rounded-full border-4 border-white bg-white shadow-md absolute left-1/2 transform -translate-x-1/2 -bottom-12"
+            className="w-24 h-24 bg-cover rounded-full border-4 border-white bg-white shadow-md absolute left-1/2 transform -translate-x-1/2 -bottom-12"
           />
         </div>
 
@@ -109,6 +112,14 @@ const PatientDetails = () => {
               </svg>
               <span className="font-medium">Disease:</span>&nbsp;{" "}
               {user?.disease}
+            </div>
+            <div className="flex items-center text-gray-600">
+            <MapPinIcon
+                aria-hidden="true"
+                className="size-5 m-1 text-gray-600"
+              />
+              <span className="font-medium">Location:</span>&nbsp;{" "}
+              {user?.location}
             </div>
           </div>
         </div>

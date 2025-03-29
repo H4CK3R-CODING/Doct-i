@@ -3,6 +3,7 @@ import toast from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue } from "recoil";
 import Atoms, { userRecoil } from "../../Recoils/Atoms";
+import { ShieldCheckIcon  } from "@heroicons/react/24/solid";
 
 const DoctorDetails = () => {
   const location = useLocation();
@@ -133,11 +134,19 @@ const DoctorDetails = () => {
             </div>
 
             <div className="flex items-center text-gray-600">
+            <ShieldCheckIcon className="size-5 m-1 text-gray-500" />
+              <span className="font-medium">Experience:</span>&nbsp;{" "}
+              {user?.experience}
+            </div>
+
+
+            <div className="flex items-center text-gray-600">
+            
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
                 fill="currentColor"
-                class="size-5 m-1"
+                class="size-5 m-1 text-yellow-400"
               >
                 <path
                   fill-rule="evenodd"
@@ -145,7 +154,7 @@ const DoctorDetails = () => {
                   clip-rule="evenodd"
                 />
               </svg>
-              <span className="font-medium">Rating:</span>&nbsp; {user?.rating}
+              <span className="font-medium">Rating:</span>&nbsp; {user?.avgRating}
             </div>
 
             {/* <div className="flex items-center text-gray-600">
@@ -202,7 +211,7 @@ const DoctorDetails = () => {
                   clip-rule="evenodd"
                 />
               </svg>
-              <span className="font-medium">Create Date:</span>&nbsp; {120}
+              <span className="font-medium">Profile Created On:</span>&nbsp; {new Date(user?.createdAt).toLocaleDateString("en-GB")}
             </div>
           </div>
         </div>

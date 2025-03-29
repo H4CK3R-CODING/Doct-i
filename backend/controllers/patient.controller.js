@@ -19,7 +19,7 @@ const patientRegister = async (req, res) => {
       return;
     }
 
-    const { name, gmail, phone, age, disease, password, gender } = req.body;
+    const { name, gmail, phone, age, disease, password, gender,location } = req.body;
 
     const verified = await Patient.findOne({
       gmail,
@@ -46,6 +46,7 @@ const patientRegister = async (req, res) => {
       disease,
       password,
       gender,
+      location
     });
 
     await Patient.create({
@@ -56,6 +57,7 @@ const patientRegister = async (req, res) => {
       disease,
       password: hashPass,
       gender,
+      location
     });
 
     res.status(200).json({

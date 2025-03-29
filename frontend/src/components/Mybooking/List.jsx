@@ -6,7 +6,8 @@ import {
   CurrencyDollarIcon,
   LinkIcon,
   MapPinIcon,
-  PencilIcon,
+  ChartBarIcon ,
+  SparklesIcon ,
 } from "@heroicons/react/20/solid";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { useRecoilValue } from "recoil";
@@ -54,7 +55,10 @@ export default function List({ bookingDetails }) {
         config
       );
 
-      if (data.msg == "Review added successfully" || data.msg == "Review Updated Successfully") {
+      if (
+        data.msg == "Review added successfully" ||
+        data.msg == "Review Updated Successfully"
+      ) {
         toast.success(data.msg);
       } else {
         toast.error(data.msg);
@@ -78,37 +82,84 @@ export default function List({ bookingDetails }) {
         </h2>
         <div className="mt-1 flex flex-col sm:mt-0 sm:flex-row sm:flex-wrap sm:space-x-6">
           <div className="mt-2 flex items-center text-sm text-gray-500">
-            <BriefcaseIcon
+            {user == "Patient"?<BriefcaseIcon
               aria-hidden="true"
               className="mr-1.5 size-5 shrink-0 text-gray-400"
-            />
-            Full-time
+            /> :<SparklesIcon className="mr-1.5 size-5 shrink-0 text-red-500" />}
+            
+            {user == "Patient"
+            ? bookingDetails?.doctor_id?.qualification
+            : (`Disease: ${bookingDetails?.patient_id?.disease}`)}
           </div>
-          {user == "Patient" ? (
+          <div className="mt-2 flex items-center text-sm text-gray-500">
+            {user=="Patient" ? <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className="-ml-0.5 mr-1 size-5 text-yellow-300"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z"
+                  clipRule="evenodd"
+                />
+              </svg> : <ChartBarIcon className="-ml-0.5 mr-1 size-5 text-purple-500" />}
+            {user == "Patient"
+            ? bookingDetails?.doctor_id?.avgRating
+            : (`Age: ${bookingDetails?.patient_id?.age}`)}
+          </div>
+          
             <div className="mt-2 flex items-center text-sm text-gray-500">
               <MapPinIcon
                 aria-hidden="true"
-                className="mr-1.5 size-5 shrink-0 text-gray-400"
+                className="mr-1.5 size-5 text-gray-400"
               />
               {user == "Patient"
                 ? bookingDetails?.doctor_id?.location
                 : bookingDetails?.patient_id?.location}
             </div>
-          ) : (
-            <div />
-          )}
-          <div className="mt-2 flex items-center text-sm text-gray-500">
-            <CurrencyDollarIcon
-              aria-hidden="true"
-              className="mr-1.5 size-5 shrink-0 text-gray-400"
-            />
-            $120k &ndash; $140k Fees
-          </div>
+          {
+            user == "Patient" ?<div className="mt-2 flex items-center text-sm text-gray-500">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="mr-1 size-5 shrink-0 text-gray-400"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M15 8.25H9m6 3H9m3 6-3-3h1.5a3 3 0 1 0 0-6M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+              />
+            </svg>
+
+            {bookingDetails?.doctor_id?.fee}
+          </div>: (<div/>)
+          }
           <div className="mt-2 flex items-center text-sm text-gray-500">
             <CalendarIcon
               aria-hidden="true"
               className="mr-1.5 size-5 shrink-0 text-gray-400"
             />
+            {new Date(bookingDetails?.date).toLocaleDateString("en-GB")}
+          </div>
+          <div className="mt-2 flex items-center text-sm text-gray-500">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="-ml-0.5 mr-1.5 size-5 text-gray-600"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+              />
+            </svg>
             {user == "Patient" ? bookingDetails?.slot : bookingDetails?.slot}
           </div>
         </div>

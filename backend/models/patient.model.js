@@ -32,6 +32,22 @@ const patientSchema = new mongoose.Schema(
       enum: ["male", "female", "other"],
       required: true,
     },
+    location: {
+      type: String,
+      enum: [
+        "Hyderabad",
+        "Mumbai",
+        "Pune",
+        "Bangalore",
+        "Kolkata",
+        "Jaipur",
+        "Chennai",
+        "Ahmedabad",
+        "Lucknow",
+        "Delhi",
+      ],
+      required: true,
+    },
   },
   {
     timestamps: true, // Automatically add createdAt and updatedAt
