@@ -50,18 +50,6 @@ const Mybooking = () => {
   };
 
   useEffect(() => {
-    // getBookings();
-    // toast.promise(getBookings(), {
-    //   loading: "Fetching Bookings...",
-    //   success: (data) => {
-    //     setBooking(data);          
-    //     return `Bookings Retrieved`;
-    //   },
-    //   error: (err) => {
-    //     console.error(err);
-    //     return "Failed to fetch Bookings";
-    //   }
-    // });
     if (booking.length === 0) {
       getBookings();
     } else {

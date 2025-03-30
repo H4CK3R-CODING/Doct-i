@@ -44,12 +44,18 @@ const appointments= atom({
   default: []
 })
 
+const allBooking= atom({
+  key: "allBooking",
+  default: []
+})
+
 const Atoms = {
   isLoginIn,
   userRecoil,
   userId,
   booking,
-  appointments
+  appointments,
+  allBooking
 };
 
 export default Atoms;

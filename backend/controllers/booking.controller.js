@@ -158,6 +158,19 @@ const getBookingByPatient = async (req, res) => {
   }
 };
 
+const getBookings = async (req, res) => {
+  try {
+    const bookings = await Booking.find()
+      .populate(["doctor_id", "patient_id"])
+      .exec();
+    return res.status(200).send(bookings);
+  } catch (error) {
+    console.log(
+      "Error occure in the bookingDoctor.controller.js ===> " + error.message
+    );
+  }
+};
+
 const patientExamined = async (req, res) => {
   try {
     const { id } = req.query;
@@ -196,4 +209,5 @@ export {
   cancelBookingByDoctor,
   cancelBookingByPatient,
   patientExamined,
+  getBookings
 };

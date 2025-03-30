@@ -18,7 +18,7 @@ import RatingPopup from "../Rating/RatingPopup";
 import toast from "react-hot-toast";
 import axios from "axios";
 
-export default function List({ bookingDetails }) {
+export default function List({ showApproveButton, setVerifiedDoctors, setNotVerifiedDoctors, verifiedDoctors, notVerifiedDoctors, bookingDetails }) {
   const [isLoading, setIsLoading] = useState(false);
   const user = useRecoilValue(userRecoil);
   const userid = useRecoilValue(userId);
@@ -148,6 +148,67 @@ export default function List({ bookingDetails }) {
     }
   };
 
+  const handleVerifyDoctor = (doctorId) => {
+    // Find the verified doctor in notVerifiedDoctors
+    console.log(doctorId)
+    const verifiedDoctor = notVerifiedDoctors.find(
+      (doctor) => doctor?.doctor_id?._id === doctorId
+    );
+  
+    if (!verifiedDoctor) return; // Exit if doctor is not found
+  
+    // Filter out the verified doctor from notVerifiedDoctors
+    const updatedNotVerified = notVerifiedDoctors.filter(
+      (doctor) => doctor?.doctor_id?._id !== doctorId
+    );
+  
+    // Add the verified doctor to verifiedDoctors
+    const updatedVerified = [...verifiedDoctors, verifiedDoctor];
+
+    // Update the state with the new lists
+    // setBooking((prev) => {
+    //   return prev.map((doc) =>
+    //     doc?.doctor_id?._id === doctorId
+    //       ? { ...doc, doctor_id: { ...doc?.doctor_id, isVerify: true } }
+    //       : doc
+    //   );
+    // });
+  
+    // Update the lists in the UI
+    setVerifiedDoctors(updatedVerified);
+    setNotVerifiedDoctors(updatedNotVerified);
+  };
+  
+  const handleDoctorVerified = async () => {
+    try {
+      setIsLoading(true);
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+      const { data } = await axios.get(
+        `${
+          import.meta.env.VITE_BACKENDURL
+        }/api/v1/user/doctorVerify?id=${bookingDetails?.doctor_id?._id}`,
+        { withCredentials: true },
+        config
+      );
+
+      if (data) {
+        // bookingDetails?.status = "completed";
+        handleVerifyDoctor(bookingDetails?.doctor_id?._id)
+        toast.success(data.msg);
+      } else {
+        toast.success("Response not comes");
+      }
+    } catch (error) {
+      toast.error(error.response.data.msg);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleExamined = async () => {
     try {
       setIsLoading(true);
@@ -185,7 +246,7 @@ export default function List({ bookingDetails }) {
   };
 
   return (
-    <div>
+    <div  className={``}>
       <div
         className={`shadow-lg w-[80vw] p-4 rounded-md lg:flex lg:items-center lg:justify-between ${
           bookingDetails?.status == "cancelled" && user!="Patient" ? "hidden" : "block"
@@ -193,13 +254,13 @@ export default function List({ bookingDetails }) {
       >
         <div className="min-w-0 flex-1">
           <h2 className="text-2xl/7 font-bold text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">
-            {user == "Patient"
+            {user == "Patient" || user == "Admin"
               ? bookingDetails?.doctor_id?.name
               : bookingDetails?.patient_id?.name}
           </h2>
           <div className="mt-1 flex flex-col sm:mt-0 sm:flex-row sm:flex-wrap sm:space-x-6">
             <div className="mt-2 flex items-center text-sm text-gray-500">
-              {user == "Patient" ? (
+              {user == "Patient" || user == "Admin" ? (
                 <BriefcaseIcon
                   aria-hidden="true"
                   className="mr-1.5 size-5 shrink-0 text-gray-400"
@@ -208,12 +269,12 @@ export default function List({ bookingDetails }) {
                 <SparklesIcon className="mr-1.5 size-5 shrink-0 text-red-500" />
               )}
 
-              {user == "Patient"
+              {user == "Patient" || user == "Admin"
                 ? bookingDetails?.doctor_id?.qualification
                 : `Disease: ${bookingDetails?.patient_id?.disease}`}
             </div>
             <div className="mt-2 flex items-center text-sm text-gray-500">
-              {user == "Patient" ? (
+              {user == "Patient" || user == "Admin" ? (
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
@@ -229,7 +290,7 @@ export default function List({ bookingDetails }) {
               ) : (
                 <ChartBarIcon className="-ml-0.5 mr-1 size-5 text-purple-500" />
               )}
-              {user == "Patient"
+              {user == "Patient" || user == "Admin"
                 ? bookingDetails?.doctor_id?.avgRating
                 : `Age: ${bookingDetails?.patient_id?.age}`}
             </div>
@@ -239,7 +300,7 @@ export default function List({ bookingDetails }) {
                 aria-hidden="true"
                 className="mr-1.5 size-5 text-gray-400"
               />
-              {user == "Patient"
+              {user == "Patient" || user == "Admin"
                 ? bookingDetails?.doctor_id?.location
                 : bookingDetails?.patient_id?.location}
             </div>
@@ -291,7 +352,7 @@ export default function List({ bookingDetails }) {
               {user == "Patient" ? bookingDetails?.slot : bookingDetails?.slot}
             </div>
           </div>
-          {bookingDetails?.reason && user == "Patient" ? (
+          {bookingDetails?.reason && user == "Patient"  ? (
             <p className="text-wrap truncate text-base overflow-hidden">
               <span className="text-red-500 font-medium">
                 Reason (Booking Cancel) :{" "}
@@ -345,7 +406,7 @@ export default function List({ bookingDetails }) {
 
           <span
             onClick={() => {
-              if (user == "Patient") {
+              if (user == "Patient" || user == "Admin") {
                 navigate("/doctordetails", {
                   state: { user: bookingDetails?.doctor_id },
                 });
@@ -426,12 +487,12 @@ export default function List({ bookingDetails }) {
             isOpen={openPopupCancel}
             onClose={handleClosePopupCancel}
             onSubmit={
-              user == "Patient"
+              user == "Patient" || user == "Admin"
                 ? handleCancelButtonByPatient
                 : handleCancelButtonByDoctor
             }
           />
-          {bookingDetails?.status !== "completed"? <span
+          {bookingDetails?.status !== "completed" && user !== "Admin"? <span
             onClick={() => {
               handleOpenPopupCancel();
             }}
@@ -463,11 +524,12 @@ export default function List({ bookingDetails }) {
             </button>
           </span> : ""}
 
-          {user !== "Patient" && bookingDetails?.status !=="completed" ? (
-            <span onClick={handleExamined} className="sm:ml-3">
-              <button
+          {user !== "Patient" && bookingDetails?.status !=="completed" && !bookingDetails?.doctor_id?.isVerify ? (
+            <span onClick={user !== "Admin"? handleExamined : handleDoctorVerified} className="sm:ml-3">
+              {
+                showApproveButton && <button
                 type="button"
-                className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                className={`inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 `}
               >
                 <CheckIcon
                   aria-hidden="true"
@@ -475,6 +537,7 @@ export default function List({ bookingDetails }) {
                 />
                 {user !== "Admin" ? "Examined": "Approve"}
               </button>
+              }
             </span>
           ) : (
             ""
