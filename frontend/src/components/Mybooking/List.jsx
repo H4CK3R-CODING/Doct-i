@@ -18,12 +18,19 @@ import RatingPopup from "../Rating/RatingPopup";
 import toast from "react-hot-toast";
 import axios from "axios";
 
-export default function List({ showApproveButton, setVerifiedDoctors, setNotVerifiedDoctors, verifiedDoctors, notVerifiedDoctors, bookingDetails }) {
+export default function List({
+  showApproveButton,
+  setVerifiedDoctors,
+  setNotVerifiedDoctors,
+  verifiedDoctors,
+  notVerifiedDoctors,
+  bookingDetails,
+}) {
   const [isLoading, setIsLoading] = useState(false);
   const user = useRecoilValue(userRecoil);
   const userid = useRecoilValue(userId);
   const setBookings = useSetRecoilState(booking);
-  const setAppointments = useSetRecoilState(Atoms.appointments)
+  const setAppointments = useSetRecoilState(Atoms.appointments);
   const navigate = useNavigate();
   // console.dir(bookingDetails);
 
@@ -150,18 +157,18 @@ export default function List({ showApproveButton, setVerifiedDoctors, setNotVeri
 
   const handleVerifyDoctor = (doctorId) => {
     // Find the verified doctor in notVerifiedDoctors
-    console.log(doctorId)
+    console.log(doctorId);
     const verifiedDoctor = notVerifiedDoctors.find(
       (doctor) => doctor?.doctor_id?._id === doctorId
     );
-  
+
     if (!verifiedDoctor) return; // Exit if doctor is not found
-  
+
     // Filter out the verified doctor from notVerifiedDoctors
     const updatedNotVerified = notVerifiedDoctors.filter(
       (doctor) => doctor?.doctor_id?._id !== doctorId
     );
-  
+
     // Add the verified doctor to verifiedDoctors
     const updatedVerified = [...verifiedDoctors, verifiedDoctor];
 
@@ -173,12 +180,12 @@ export default function List({ showApproveButton, setVerifiedDoctors, setNotVeri
     //       : doc
     //   );
     // });
-  
+
     // Update the lists in the UI
     setVerifiedDoctors(updatedVerified);
     setNotVerifiedDoctors(updatedNotVerified);
   };
-  
+
   const handleDoctorVerified = async () => {
     try {
       setIsLoading(true);
@@ -188,16 +195,16 @@ export default function List({ showApproveButton, setVerifiedDoctors, setNotVeri
         },
       };
       const { data } = await axios.get(
-        `${
-          import.meta.env.VITE_BACKENDURL
-        }/api/v1/user/doctorVerify?id=${bookingDetails?.doctor_id?._id}`,
+        `${import.meta.env.VITE_BACKENDURL}/api/v1/user/doctorVerify?id=${
+          bookingDetails?.doctor_id?._id
+        }`,
         { withCredentials: true },
         config
       );
 
       if (data) {
         // bookingDetails?.status = "completed";
-        handleVerifyDoctor(bookingDetails?.doctor_id?._id)
+        handleVerifyDoctor(bookingDetails?.doctor_id?._id);
         toast.success(data.msg);
       } else {
         toast.success("Response not comes");
@@ -218,9 +225,9 @@ export default function List({ showApproveButton, setVerifiedDoctors, setNotVeri
         },
       };
       const { data } = await axios.get(
-        `${
-          import.meta.env.VITE_BACKENDURL
-        }/api/v1/booking/patientExamined?id=${bookingDetails?._id}`,
+        `${import.meta.env.VITE_BACKENDURL}/api/v1/booking/patientExamined?id=${
+          bookingDetails?._id
+        }`,
         { withCredentials: true },
         config
       );
@@ -230,7 +237,7 @@ export default function List({ showApproveButton, setVerifiedDoctors, setNotVeri
         setAppointments((curr) =>
           curr.map((appointment) =>
             appointment._id === bookingDetails?._id
-              ? { ...appointment, status: "completed" }  // Update status
+              ? { ...appointment, status: "completed" } // Update status
               : appointment
           )
         );
@@ -246,10 +253,12 @@ export default function List({ showApproveButton, setVerifiedDoctors, setNotVeri
   };
 
   return (
-    <div  className={``}>
+    <div className={``}>
       <div
         className={`shadow-lg w-[80vw] p-4 rounded-md lg:flex lg:items-center lg:justify-between ${
-          bookingDetails?.status == "cancelled" && user!="Patient" ? "hidden" : "block"
+          bookingDetails?.status == "cancelled" && user != "Patient"
+            ? "hidden"
+            : "block"
         }`}
       >
         <div className="min-w-0 flex-1">
@@ -352,7 +361,7 @@ export default function List({ showApproveButton, setVerifiedDoctors, setNotVeri
               {user == "Patient" ? bookingDetails?.slot : bookingDetails?.slot}
             </div>
           </div>
-          {bookingDetails?.reason && user == "Patient"  ? (
+          {bookingDetails?.reason && user == "Patient" ? (
             <p className="text-wrap truncate text-base overflow-hidden">
               <span className="text-red-500 font-medium">
                 Reason (Booking Cancel) :{" "}
@@ -366,7 +375,9 @@ export default function List({ showApproveButton, setVerifiedDoctors, setNotVeri
           )}
         </div>
         <div className="mt-5  flex lg:ml-4 lg:mt-0">
-          {user == "Patient" && bookingDetails?.status !== "completed" && user !== "Admin" ? (
+          {user == "Patient" &&
+          bookingDetails?.status !== "completed" &&
+          user !== "Admin" ? (
             <span
               onClick={() => {
                 navigate("/bookingDoctor", {
@@ -492,52 +503,83 @@ export default function List({ showApproveButton, setVerifiedDoctors, setNotVeri
                 : handleCancelButtonByDoctor
             }
           />
-          {bookingDetails?.status !== "completed" && user !== "Admin"? <span
-            onClick={() => {
-              handleOpenPopupCancel();
-            }}
-            className="ml-3 hidden sm:block"
-          >
-            <button
-              type="button"
-              className="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+          {bookingDetails?.status !== "completed" && user !== "Admin" ? (
+            <span
+              onClick={() => {
+                handleOpenPopupCancel();
+              }}
+              className="ml-3 hidden sm:block"
             >
-              {/* <LinkIcon
+              <button
+                type="button"
+                className="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+              >
+                {/* <LinkIcon
               aria-hidden="true"
               className="-ml-0.5 mr-1.5 size-5 text-gray-400"
             /> */}
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                className="-ml-0.5 mr-1.5 size-5 text-red-500"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="m20.25 7.5-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5m6 4.125 2.25 2.25m0 0 2.25 2.25M12 13.875l2.25-2.25M12 13.875l-2.25 2.25M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z"
-                />
-              </svg>
-              Cancel
-            </button>
-          </span> : ""}
-
-          {user !== "Patient" && bookingDetails?.status !=="completed" && !bookingDetails?.doctor_id?.isVerify ? (
-            <span onClick={user !== "Admin"? handleExamined : handleDoctorVerified} className="sm:ml-3">
-              {
-                showApproveButton && <button
-                type="button"
-                className={`inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 `}
-              >
-                <CheckIcon
-                  aria-hidden="true"
-                  className="-ml-0.5 mr-1.5 size-5"
-                />
-                {user !== "Admin" ? "Examined": "Approve"}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  className="-ml-0.5 mr-1.5 size-5 text-red-500"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="m20.25 7.5-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5m6 4.125 2.25 2.25m0 0 2.25 2.25M12 13.875l2.25-2.25M12 13.875l-2.25 2.25M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z"
+                  />
+                </svg>
+                Cancel
               </button>
-              }
+            </span>
+          ) : (
+            ""
+          )}
+
+          {user !== "Patient" &&
+          bookingDetails?.status !== "completed" &&
+          !bookingDetails?.doctor_id?.isVerify ? (
+            <span
+              onClick={user !== "Admin" ? handleExamined : handleDoctorVerified}
+              className="sm:ml-3"
+            >
+              {showApproveButton && (
+                <button
+                  type="button"
+                  className={`inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 `}
+                >
+                  <CheckIcon
+                    aria-hidden="true"
+                    className="-ml-0.5 mr-1.5 size-5"
+                  />
+                  {user !== "Admin" ? "Examined" : "Approve"}
+                </button>
+              )}
+            </span>
+          ) : (
+            ""
+          )}
+          {user !== "Admin"  &&
+          bookingDetails?.doctor_id?.isVerify ? (
+            <span
+              onClick={console.log("meet")}
+              className="sm:ml-3"
+            >
+              { (
+                <button
+                  type="button"
+                  className={`inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 `}
+                >
+                  <CheckIcon
+                    aria-hidden="true"
+                    className="-ml-0.5 mr-1.5 size-5"
+                  />
+                  {user !== "Patient" ? "Create Meet" : "Join Meet"}
+                </button>
+              )}
             </span>
           ) : (
             ""

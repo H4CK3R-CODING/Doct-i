@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-// import List from './List'
+import List from './List'
 import Bookings from "../../components/Mybooking/Bookings";
 import Mybooking from "../../components/Mybooking/Mybooking";
 import { useNavigate } from "react-router-dom";
@@ -7,7 +7,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import Atoms from "../../Recoils/Atoms";
 import axios from "axios";
 import toast from "react-hot-toast";
-import List from "../../components/Mybooking/List";
+// import List from "../../components/Mybooking/List";
 
 const Admin = () => {
   const [loading, setLoading] = useState(false);
@@ -76,9 +76,53 @@ const Admin = () => {
     }
   };
 
+  const getDoctors = async ()=>{
+    setLoading(true);
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+
+      if (userId == "") {
+        console.log("user not logged in");
+        return;
+      }
+
+      const { data } = await axios.get(
+        `${import.meta.env.VITE_BACKENDURL}/api/v1/user/getDoctors`,
+        { withCredentials: true },
+        config
+      );
+
+      // return data;
+
+      if (data && data.length > 0) {
+        const verified = data.filter(
+          (doctor) => doctor?.isVerify ?? false
+        );
+  
+        const notVerified = data.filter(
+          (doctor) => !(doctor?.isVerify ?? false)
+        );
+  
+        setVerifiedDoctors(verified);
+        setNotVerifiedDoctors(notVerified);
+        console.dir(data);
+      } else {
+        console.log("Not Booking");
+      }
+    } catch (error) {
+      toast.error("Error on Backend Side");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   useEffect(() => {
     if (booking.length === 0) {
-      getBookings();
+      getDoctors();
     } else {
       setLoading(false);
     }
@@ -124,7 +168,7 @@ const Admin = () => {
                         key={idx}
                         className="flex justify-center cursor-pointer p-4 "
                       >
-                        <List showApproveButton={false} bookingDetails={ele} />
+                        <List showApproveButton={false} doctor={ele} />
                         {/* <p>
                         {ele?.doctor_id?.name} at {ele?.slot}
                       </p>
@@ -148,7 +192,7 @@ const Admin = () => {
                         key={idx}
                         className="flex justify-center cursor-pointer p-4 "
                       >
-                        <List showApproveButton={true}  setVerifiedDoctors={setVerifiedDoctors} setNotVerifiedDoctors={setNotVerifiedDoctors} verifiedDoctors={verifiedDoctors} notVerifiedDoctors={notVerifiedDoctors} bookingDetails={ele} />
+                        <List showApproveButton={true}  setVerifiedDoctors={setVerifiedDoctors} setNotVerifiedDoctors={setNotVerifiedDoctors} verifiedDoctors={verifiedDoctors} notVerifiedDoctors={notVerifiedDoctors} doctor={ele} />
                         {/* <p>
                             {ele?.doctor_id?.name} at {ele?.slot}
                           </p>

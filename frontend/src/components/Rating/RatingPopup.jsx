@@ -16,7 +16,7 @@ const RatingPopup = ({ isOpen, onClose, onSubmit, cancel }) => {
   };
 
   const handleCancel = () => {
-    if ((user !== "Patient"|| user !== "Admin") && review.trim() === "") {
+    if (user !== "Patient" && review.trim() === "") {
       toast.error("Please provide reason.");
       return;
     }

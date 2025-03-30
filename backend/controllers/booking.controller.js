@@ -202,6 +202,34 @@ const patientExamined = async (req, res) => {
   }
 };
 
+const shareMeetLink = async (req, res) => {
+  const { bookingId, meetLink } = req.body;
+
+  try {
+    if (!bookingId || !meetLink) {
+      return res.status(400).json({ msg: "Booking ID and Meet link required" });
+    }
+
+    const updatedBooking = await Booking.findByIdAndUpdate(
+      {_id : bookingId},
+      { $set: { meetLink } },
+      { new: true }
+    );
+
+    if (updatedBooking) {
+      res.status(200).json({
+        msg: "Google Meet link shared successfully",
+        booking: updatedBooking,
+      });
+    } else {
+      res.status(404).json({ msg: "Booking not found" });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ msg: "Server Error" });
+  }
+}
+
 export {
   bookingDoctor,
   getBookingByDoctor,
@@ -209,5 +237,6 @@ export {
   cancelBookingByDoctor,
   cancelBookingByPatient,
   patientExamined,
-  getBookings
+  getBookings,
+  shareMeetLink
 };

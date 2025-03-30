@@ -195,7 +195,7 @@ const doctorVerify = async (req, res) => {
     if (isVerify) {
       return res.status(200).json({
         msg: "Doctor Verified",
-        isVerify
+        isVerify,
       });
     }
 
@@ -209,4 +209,16 @@ const doctorVerify = async (req, res) => {
   }
 };
 
-export { doctorRegister, doctorLogin, searchDoctor, doctorVerify };
+const getDoctors = async (req, res) => {
+  try {
+    const doctors = await Doctor.find().select("-password");
+    return res.status(200).send(doctors);
+  } catch (error) {
+    console.log(
+      "Error occure in the getDoctors doctor.controller.js ===> " +
+        error.message
+    );
+  }
+};
+
+export { doctorRegister, doctorLogin, searchDoctor, doctorVerify, getDoctors };
