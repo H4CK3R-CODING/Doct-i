@@ -1,219 +1,42 @@
 import {
-  BriefcaseIcon,
-  CalendarIcon,
-  CheckIcon,
-  ChevronDownIcon,
-  CurrencyDollarIcon,
-  LinkIcon,
-  MapPinIcon,
-  ChartBarIcon,
-  SparklesIcon,
-} from "@heroicons/react/20/solid";
-import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import Atoms, { booking, userId, userRecoil } from "../../Recoils/Atoms";
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
-import RatingPopup from "../Rating/RatingPopup";
-import toast from "react-hot-toast";
-import axios from "axios";
+    BriefcaseIcon,
+    CalendarIcon,
+    CheckIcon,
+    ChevronDownIcon,
+    CurrencyDollarIcon,
+    LinkIcon,
+    MapPinIcon,
+    ChartBarIcon,
+    SparklesIcon,
+  } from "@heroicons/react/20/solid";
+  import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
+  import { useRecoilValue, useSetRecoilState } from "recoil";
+  import Atoms, { booking, userId, userRecoil } from "../../Recoils/Atoms";
+  import { useNavigate } from "react-router-dom";
+  import { useState } from "react";
+  import toast from "react-hot-toast";
+  import axios from "axios";
+import React from 'react'
 
-export default function List({ bookingDetails }) {
-  const [isLoading, setIsLoading] = useState(false);
-  const user = useRecoilValue(userRecoil);
-  const userid = useRecoilValue(userId);
-  const setBookings = useSetRecoilState(booking);
-  const setAppointments = useSetRecoilState(Atoms.appointments)
-  const navigate = useNavigate();
-  // console.dir(bookingDetails);
-
-  const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const [openPopupCancel, setOpenPopupCancel] = useState(false);
-
-  const handleOpenPopup = () => {
-    setIsPopupOpen(true);
-  };
-
-  const handleOpenPopupCancel = () => {
-    setOpenPopupCancel(true);
-  };
-
-  const handleClosePopup = () => {
-    setIsPopupOpen(false);
-  };
-  const handleClosePopupCancel = () => {
-    setOpenPopupCancel(false);
-  };
-
-  const handleSubmitRating = async ({ rating, review }) => {
-    try {
-      setIsLoading(true);
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      };
-      const { data } = await axios.post(
-        `${import.meta.env.VITE_BACKENDURL}/api/v1/user/rating`,
-        {
-          rating,
-          review,
-          doctor_id: bookingDetails?.doctor_id?._id,
-          patient_id: userid,
-        },
-        { withCredentials: true },
-        config
-      );
-
-      if (
-        data.msg == "Review added successfully" ||
-        data.msg == "Review Updated Successfully"
-      ) {
-        toast.success(data.msg);
-      } else {
-        toast.error(data.msg);
-      }
-    } catch (error) {
-      // toast.error("Error on Backend Side");
-      // toast.error(error.data.msg);
-      toast.error(error.response.data.msg);
-    } finally {
-      setIsLoading(false);
-    }
-    console.log("Rating submitted:", { rating, review });
-  };
-
-  const handleCancelButtonByDoctor = async ({ reason }) => {
-    try {
-      setIsLoading(true);
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      };
-      const { data } = await axios.post(
-        `${
-          import.meta.env.VITE_BACKENDURL
-        }/api/v1/booking/cancelBookingByDoctor`,
-        {
-          id: bookingDetails?._id,
-          reason,
-        },
-        { withCredentials: true },
-        config
-      );
-
-      if (data) {
-        setAppointments((curr) =>
-          curr.filter((appt) => appt._id !== bookingDetails?._id)
-        );
-        toast.success(data.msg);
-      }
-    } catch (error) {
-      toast.error(error.response.data.msg);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleCancelButtonByPatient = async () => {
-    try {
-      setIsLoading(true);
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      };
-      const { data } = await axios.get(
-        `${
-          import.meta.env.VITE_BACKENDURL
-        }/api/v1/booking/cancelBookingByPatient?id=${bookingDetails?._id}`,
-        { withCredentials: true },
-        config
-      );
-
-      // setBookings((curr) =>
-      //   curr.filter((appt) => appt._id !== bookingDetails?._id)
-      // );
-      if (data) {
-        setBookings((curr) =>
-          curr.filter((appt) => appt._id !== bookingDetails?._id)
-        );
-        toast.success(data.msg);
-      }
-    } catch (error) {
-      toast.error(error.response.data.msg);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleExamined = async () => {
-    try {
-      setIsLoading(true);
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      };
-      const { data } = await axios.get(
-        `${
-          import.meta.env.VITE_BACKENDURL
-        }/api/v1/booking/patientExamined?id=${bookingDetails?._id}`,
-        { withCredentials: true },
-        config
-      );
-
-      if (data) {
-        // bookingDetails?.status = "completed";
-        setAppointments((curr) =>
-          curr.map((appointment) =>
-            appointment._id === bookingDetails?._id
-              ? { ...appointment, status: "completed" }  // Update status
-              : appointment
-          )
-        );
-        toast.success(data.msg);
-      } else {
-        toast.success("Response not comes");
-      }
-    } catch (error) {
-      toast.error(error.response.data.msg);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
+const List = () => {
   return (
-    <div>
-      <div
-        className={`shadow-lg w-[80vw] p-4 rounded-md lg:flex lg:items-center lg:justify-between ${
-          bookingDetails?.status == "cancelled" && user!="Patient" ? "hidden" : "block"
+    <div
+        className={`shadow-lg w-[80vw] p-4 rounded-md lg:flex lg:items-center lg:justify-between
         }`}
       >
         <div className="min-w-0 flex-1">
-          <h2 className="text-2xl/7 font-bold text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">
-            {user == "Patient"
-              ? bookingDetails?.doctor_id?.name
-              : bookingDetails?.patient_id?.name}
+          <h2 className="text-2xl/7 font-bold text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">Name
           </h2>
           <div className="mt-1 flex flex-col sm:mt-0 sm:flex-row sm:flex-wrap sm:space-x-6">
             <div className="mt-2 flex items-center text-sm text-gray-500">
-              {user == "Patient" ? (
                 <BriefcaseIcon
                   aria-hidden="true"
                   className="mr-1.5 size-5 shrink-0 text-gray-400"
                 />
-              ) : (
                 <SparklesIcon className="mr-1.5 size-5 shrink-0 text-red-500" />
-              )}
-
-              {user == "Patient"
-                ? bookingDetails?.doctor_id?.qualification
-                : `Disease: ${bookingDetails?.patient_id?.disease}`}
             </div>
             <div className="mt-2 flex items-center text-sm text-gray-500">
-              {user == "Patient" ? (
+              
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
@@ -226,12 +49,7 @@ export default function List({ bookingDetails }) {
                     clipRule="evenodd"
                   />
                 </svg>
-              ) : (
-                <ChartBarIcon className="-ml-0.5 mr-1 size-5 text-purple-500" />
-              )}
-              {user == "Patient"
-                ? bookingDetails?.doctor_id?.avgRating
-                : `Age: ${bookingDetails?.patient_id?.age}`}
+                avg
             </div>
 
             <div className="mt-2 flex items-center text-sm text-gray-500">
@@ -239,12 +57,9 @@ export default function List({ bookingDetails }) {
                 aria-hidden="true"
                 className="mr-1.5 size-5 text-gray-400"
               />
-              {user == "Patient"
-                ? bookingDetails?.doctor_id?.location
-                : bookingDetails?.patient_id?.location}
+              location
             </div>
 
-            {user == "Patient" ? (
               <div className="mt-2 flex items-center text-sm text-gray-500">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -261,17 +76,14 @@ export default function List({ bookingDetails }) {
                   />
                 </svg>
 
-                {bookingDetails?.doctor_id?.fee}
+                fee
               </div>
-            ) : (
-              <div />
-            )}
             <div className="mt-2 flex items-center text-sm text-gray-500">
               <CalendarIcon
                 aria-hidden="true"
                 className="mr-1.5 size-5 shrink-0 text-gray-400"
               />
-              {new Date(bookingDetails?.date).toLocaleDateString("en-GB")}
+              date
             </div>
             <div className="mt-2 flex items-center text-sm text-gray-500">
               <svg
@@ -288,30 +100,13 @@ export default function List({ bookingDetails }) {
                   d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
                 />
               </svg>
-              {user == "Patient" ? bookingDetails?.slot : bookingDetails?.slot}
+              slot
             </div>
           </div>
-          {bookingDetails?.reason && user == "Patient" ? (
-            <p className="text-wrap truncate text-base overflow-hidden">
-              <span className="text-red-500 font-medium">
-                Reason (Booking Cancel) :{" "}
-              </span>
-              <span className="truncate mt-4 text-red- font- text-wrap">
-                {bookingDetails?.reason}
-              </span>
-            </p>
-          ) : (
-            ""
-          )}
         </div>
         <div className="mt-5  flex lg:ml-4 lg:mt-0">
-          {user == "Patient" && bookingDetails?.status !== "completed" && user !== "Admin" ? (
             <span
-              onClick={() => {
-                navigate("/bookingDoctor", {
-                  state: { doctor_id: bookingDetails?.doctor_id?._id },
-                });
-              }}
+              
               className="hidden sm:block"
             >
               <button
@@ -339,22 +134,9 @@ export default function List({ bookingDetails }) {
                 Change Slot
               </button>
             </span>
-          ) : (
-            <div />
-          )}
 
           <span
-            onClick={() => {
-              if (user == "Patient") {
-                navigate("/doctordetails", {
-                  state: { user: bookingDetails?.doctor_id },
-                });
-              } else if (user == "Doctor") {
-                navigate("/patientdetails", {
-                  state: { user: bookingDetails?.patient_id },
-                });
-              }
-            }}
+            
             className="ml-3 hidden sm:block"
           >
             <button
@@ -381,13 +163,6 @@ export default function List({ bookingDetails }) {
             </button>
           </span>
 
-          {/* Popup Component */}
-          <RatingPopup
-            isOpen={isPopupOpen}
-            onClose={handleClosePopup}
-            onSubmit={handleSubmitRating}
-          />
-          {user == "Patient" && user !== "Admin" ? (
             <span
               onClick={() => {
                 handleOpenPopup();
@@ -417,21 +192,8 @@ export default function List({ bookingDetails }) {
                 Review
               </button>
             </span>
-          ) : (
-            <span></span>
-          )}
 
-          <RatingPopup
-            cancel={"cancel"}
-            isOpen={openPopupCancel}
-            onClose={handleClosePopupCancel}
-            onSubmit={
-              user == "Patient"
-                ? handleCancelButtonByPatient
-                : handleCancelButtonByDoctor
-            }
-          />
-          {bookingDetails?.status !== "completed"? <span
+          <span
             onClick={() => {
               handleOpenPopupCancel();
             }}
@@ -461,10 +223,9 @@ export default function List({ bookingDetails }) {
               </svg>
               Cancel
             </button>
-          </span> : ""}
+          </span>
 
-          {user !== "Patient" && bookingDetails?.status !=="completed" ? (
-            <span onClick={handleExamined} className="sm:ml-3">
+            <span  className="sm:ml-3">
               <button
                 type="button"
                 className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
@@ -473,12 +234,10 @@ export default function List({ bookingDetails }) {
                   aria-hidden="true"
                   className="-ml-0.5 mr-1.5 size-5"
                 />
-                {user !== "Admin" ? "Examined": "Approve"}
+                Examined
               </button>
             </span>
-          ) : (
-            ""
-          )}
+          
 
           {/* Dropdown */}
           <Menu as="div" className="relative ml-3 sm:hidden">
@@ -514,6 +273,7 @@ export default function List({ bookingDetails }) {
           </Menu>
         </div>
       </div>
-    </div>
-  );
+  )
 }
+
+export default List

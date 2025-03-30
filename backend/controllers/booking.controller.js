@@ -23,9 +23,14 @@ const bookingDoctor = async (req, res) => {
       return;
     }
 
+    const updateFields = { date, slot };
+    if (reportfile) {
+      updateFields.reportfile = reportfile;
+    }
+
     const isBooking = await Booking.findOneAndUpdate(
       { doctor_id, patient_id },
-      { $set: { date, slot, reportfile } },
+      { $set: updateFields  },
       { new: true, upsert: true }
     );
 

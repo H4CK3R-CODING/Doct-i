@@ -7,7 +7,7 @@ import List from "./List";
 import { useNavigate } from "react-router-dom";
 
 const Mybooking = () => {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const userId = useRecoilValue(Atoms.userId);
   const [booking, setBooking] = useRecoilState(Atoms.booking);
   const navigate = useNavigate()
@@ -33,10 +33,10 @@ const Mybooking = () => {
         { withCredentials: true },
         config
       );
-
+      
       // return data;
 
-      if (data) {
+      if (data && data.length > 0) {
         setBooking(data);
         console.dir(data)
       } else {
@@ -50,7 +50,7 @@ const Mybooking = () => {
   };
 
   useEffect(() => {
-    getBookings();
+    // getBookings();
     // toast.promise(getBookings(), {
     //   loading: "Fetching Bookings...",
     //   success: (data) => {
@@ -62,6 +62,11 @@ const Mybooking = () => {
     //     return "Failed to fetch Bookings";
     //   }
     // });
+    if (booking.length === 0) {
+      getBookings();
+    } else {
+      setLoading(false);
+    }
   }, [userId]);
 
   return (

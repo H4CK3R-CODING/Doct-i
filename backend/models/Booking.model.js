@@ -27,6 +27,7 @@ const BookingSchema = new mongoose.Schema({
   reportfile: {
     type: String,
     required: false,
+    default: ""
   },
   status: {
     type: String,
