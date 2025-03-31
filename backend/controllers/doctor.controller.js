@@ -152,23 +152,22 @@ const searchDoctor = async (req, res) => {
     //   const doctorsList = await Doctor.find({ licence: { $eq: doctor_id } });
     //   return res.status(200).send(doctorsList);
     // }
+    let doctorsList;
+    if (doctor_id !== "") {
+      doctorsList = await Doctor.find({"_id" : doctor_id}).select("-password").exec();
+    } else {
+      doctorsList = await Doctor.find({
+        $and: [
+          {
+            location: { $eq: location },
+            specilization: { $eq: specilization },
+          },
+        ],
+      }).select("-password").exec();
+    }
 
-    const doctorsList = await Doctor.find({
-      $or: [
-        {
-          $and: [
-            {
-              location: { $eq: location },
-              specilization: { $eq: specilization },
-            },
-          ],
-        },
-        { licence: { $eq: doctor_id } },
-      ],
-    }).select("-password");
     // const doctorsList = await Doctor.find({ location: { $eq: location }, specilization: {$eq: specilization} });
     return res.status(200).send(doctorsList);
-    
   } catch (error) {
     console.log(
       "Error occure in the searchDoctor.controller.js ===> " + error.message

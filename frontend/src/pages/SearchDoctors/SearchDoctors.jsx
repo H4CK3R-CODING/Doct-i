@@ -161,6 +161,7 @@ const SearchDoctors = () => {
           { doctor_id, location, specilization },
           { withCredentials: true }
         );
+        console.log(data)
         if (data.length) {
           setUsers(data);
         } else {
