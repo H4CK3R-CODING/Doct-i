@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import validateEmail from "../../../utils/validateEmail";
 import Option from "../../components/Option";
+import { useNavigate } from "react-router-dom";
 
 const DoctorRegister = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -20,6 +21,7 @@ const DoctorRegister = () => {
   const [password, setPassword] = useState("");
   const [specilization, setSpecilization] = useState("");
   const [location, setLocation] = useState("");
+  const navigate = useNavigate()
   
 
   const noInput = [
@@ -180,9 +182,7 @@ const DoctorRegister = () => {
         );
         if (data.msg == "Doctor Registered") {
           toast.success("Doctor Registered Successfully!");
-          // navigate("/register/verify", {
-          //   state: { data: { name, semester, branch, gmail } },
-          // });
+          navigate("/loginDoctor");
         } else if (data.msg == "User already exist") {
           toast.success("User already exist");
         } else {

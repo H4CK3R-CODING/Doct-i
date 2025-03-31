@@ -316,7 +316,7 @@ export default function List({ bookingDetails }) {
 
 
   return (
-    <div className={`relative bg-white shadow-lg rounded-lg overflow-hidden transition-transform duration-300 hover:scale-105 hover:shadow-2xl w-full lg:w-[80vw] p-6 mb-6`}>
+    <div className={`relative bg-white shadow-lg rounded-lg overflow-hidden transition-transform duration-300  hover:shadow-2xl w-full lg:w-[80vw] p-6 mb-6`}>
       {/* Status Indicator */}
       <div
         className={`absolute top-2 right-2 px-3 py-1 text-xs font-bold rounded-full ${getStatusStyles()}`}

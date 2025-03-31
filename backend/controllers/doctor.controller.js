@@ -163,11 +163,12 @@ const searchDoctor = async (req, res) => {
             },
           ],
         },
-        { _id: { $eq: doctor_id } },
+        { licence: { $eq: doctor_id } },
       ],
     }).select("-password");
     // const doctorsList = await Doctor.find({ location: { $eq: location }, specilization: {$eq: specilization} });
     return res.status(200).send(doctorsList);
+    
   } catch (error) {
     console.log(
       "Error occure in the searchDoctor.controller.js ===> " + error.message

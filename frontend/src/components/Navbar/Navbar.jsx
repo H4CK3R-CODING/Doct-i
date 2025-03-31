@@ -4,6 +4,7 @@ import { useRecoilState, useSetRecoilState } from "recoil";
 import Atoms from "../../Recoils/Atoms";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { MdSpaceDashboard } from "react-icons/md";
 import { UserCircleIcon } from "@heroicons/react/24/solid";
 import { AiOutlineLogout } from "react-icons/ai";
 import { FaUserMd } from "react-icons/fa";
@@ -52,6 +53,13 @@ const Navbar = () => {
         {!isLoggedIn ? (
           <>
             <Link
+              to="/admin"
+              className="bg-white text-sky-600 px-4 py-2 rounded-md hover:bg-gray-200 transition flex items-center p-4 shadow-md"
+            >
+              <FaUserMd className="-ml-0.5 mr-1.5 size-5 text-sky-500" />
+              <p className="font-medium">Admin</p>
+            </Link>
+            <Link
               to="/loginDoctor"
               className="bg-white text-sky-600 px-4 py-2 rounded-md hover:bg-gray-200 transition flex items-center p-4 shadow-md"
             >
@@ -72,7 +80,7 @@ const Navbar = () => {
               to="/dashboard"
               className="bg-white text-sky-600 px-4 py-2 rounded-md hover:bg-gray-200 transition flex justify-center items-center"
             >
-              <MagnifyingGlassIcon className="-ml-0.5 mr-1.5 size-5 text-sky-500" />
+              <MdSpaceDashboard className="-ml-0.5 mr-1.5 size-5 text-sky-500"/>
               <p className="font-medium">Dashboard</p>
             </Link>
             <button
