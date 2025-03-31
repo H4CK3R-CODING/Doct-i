@@ -8,6 +8,7 @@ import {
   MapPinIcon,
   ChartBarIcon,
   SparklesIcon,
+  VideoCameraIcon 
 } from "@heroicons/react/20/solid";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
@@ -315,7 +316,7 @@ export default function List({ bookingDetails }) {
 
 
   return (
-    <div className={`relative`}>
+    <div className={`relative bg-white shadow-lg rounded-lg overflow-hidden transition-transform duration-300 hover:scale-105 hover:shadow-2xl w-full lg:w-[80vw] p-6 mb-6`}>
       {/* Status Indicator */}
       <div
         className={`absolute top-2 right-2 px-3 py-1 text-xs font-bold rounded-full ${getStatusStyles()}`}
@@ -324,7 +325,7 @@ export default function List({ bookingDetails }) {
         {/* Capitalize status */}
       </div>
       <div
-        className={`shadow-lg w-[80vw] p-4 rounded-md lg:flex lg:items-center lg:justify-between ${
+        className={` ${
           bookingDetails?.status == "cancelled" && user != "Patient"
             ? "hidden"
             : "block"
@@ -680,10 +681,7 @@ export default function List({ bookingDetails }) {
                   type="button"
                   className={`inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 `}
                 >
-                  <CheckIcon
-                    aria-hidden="true"
-                    className="-ml-0.5 mr-1.5 size-5"
-                  />
+                  <VideoCameraIcon className="-ml-0.5 mr-1.5 size-5" />
                   {user !== "Patient" && !bookingDetails?.meetLink ? "Create Meet" : "Join Meet"}
                 </button>
               }
