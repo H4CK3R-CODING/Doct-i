@@ -224,7 +224,8 @@ const SearchDoctors = () => {
 
         {/* Search Button */}
         <div className="flex justify-center mt-5">
-          {isLoading ? <Loading /> : <Btn btninfo={btninfo} />}
+          {/* {isLoading ? <Loading /> : <Btn btninfo={btninfo} />} */}
+          <Btn btninfo={btninfo} loading={isLoading} />
         </div>
       </div>
 

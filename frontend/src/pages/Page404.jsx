@@ -13,12 +13,6 @@ const Page404 = () => {
                 navigate("/")
             }
         },
-        {
-            label : "Contact Us",
-            onclick : ()=>{
-                navigate("/contact")
-            }
-        },
 
     ]
   return (

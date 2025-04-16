@@ -96,7 +96,11 @@ const LoginDoctor = () => {
           {noInput.map((ele, idx) => (
             <InputContainer key={idx} detail={ele} />
           ))}
-          {isLoading ? <Loading /> : <Btn btninfo={btninfo} />}
+          {/* {isLoading ? <Loading /> : <Btn btninfo={btninfo} />} */}
+          <Btn
+            btninfo={btninfo}
+            loading={isLoading}
+          />
         </form>
 
         <p className="mt-6 text-center text-gray-600">

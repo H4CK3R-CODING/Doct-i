@@ -106,14 +106,19 @@ const LoginPatient = () => {
             <InputContainer key={idx} detail={ele} />
           ))}
 
-          {isLoading ? (
+          {/* {isLoading ? (
             <Loading />
           ) : (
             <Btn
               btninfo={btninfo}
               className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-lg transition-all duration-300"
             />
-          )}
+          )} */}
+
+          <Btn
+            btninfo={btninfo}
+            loading={isLoading}
+          />
         </form>
 
         {/* Links */}

@@ -21,8 +21,7 @@ const DoctorRegister = () => {
   const [password, setPassword] = useState("");
   const [specilization, setSpecilization] = useState("");
   const [location, setLocation] = useState("");
-  const navigate = useNavigate()
-  
+  const navigate = useNavigate();
 
   const noInput = [
     {
@@ -133,17 +132,17 @@ const DoctorRegister = () => {
         event.preventDefault();
         setIsLoading(true);
         if (
-          name == "" ||
-          gmail == "" ||
-          phone == null ||
-          age == null ||
-          experience == null ||
-          qualification == "" ||
-          licence == "" ||
-          fee == null ||
-          password == "" ||
-          specilization == "",
-          location == ""
+          (name == "" ||
+            gmail == "" ||
+            phone == null ||
+            age == null ||
+            experience == null ||
+            qualification == "" ||
+            licence == "" ||
+            fee == null ||
+            password == "" ||
+            specilization == "",
+          location == "")
         ) {
           toast.error("Please Fill Up Important Details");
           return;
@@ -159,9 +158,9 @@ const DoctorRegister = () => {
         };
         const phoneInt = parseInt(phone);
         const ageInt = parseInt(age);
-        const experienceInt = parseInt(experience)
-        const feeInt = parseInt(fee)
-        
+        const experienceInt = parseInt(experience);
+        const feeInt = parseInt(fee);
+
         const { data } = await axios.post(
           `${import.meta.env.VITE_BACKENDURL}/api/v1/user/doctorRegister`,
           {
@@ -175,7 +174,7 @@ const DoctorRegister = () => {
             fee: feeInt,
             password,
             specilization,
-            location
+            location,
           },
           { withCredentials: true },
           config
@@ -309,8 +308,7 @@ const DoctorRegister = () => {
     },
   ];
 
-  const credientialsData=[
-    
+  const credientialsData = [
     {
       label: "Location",
       sele: "location",
@@ -321,35 +319,43 @@ const DoctorRegister = () => {
       sele: "specilization",
       opt: [...specilizationArr],
     },
-  ]
+  ];
   return (
     <div className="min-h-screen bg-gradient-to-r from-sky-500 to-blue-700 flex flex-col items-center justify-center p-6">
       <div className="bg-white shadow-2xl rounded-2xl max-w-lg w-full p-8 transition-transform duration-300">
-      <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-1 lg:px-8">
-        <img
-          alt="Your Company"
-          src="doctor.png"
-          // src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600"
-          className="mx-auto h-20 w-auto"
-        />
-        <h2 className="mt-4 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
-        Doctor Registration
-        </h2>
-      </div>
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form className="space-y-6">
-          {noInput.map((ele, idx) => {
-            return <InputContainer key={idx} detail={ele} />;
-          })}
-          {credientialsData.map((ele, idx) => {
-              return <Option key={idx} opt={ele}  setLocation={setLocation} setSpecilization={setSpecilization}/>;
+        <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-1 lg:px-8">
+          <img
+            alt="Your Company"
+            src="doctor.png"
+            // src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600"
+            className="mx-auto h-20 w-auto"
+          />
+          <h2 className="mt-4 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
+            Doctor Registration
+          </h2>
+        </div>
+        <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-sm">
+          <form className="space-y-6">
+            {noInput.map((ele, idx) => {
+              return <InputContainer key={idx} detail={ele} />;
             })}
-          {/* {data.map((ele, idx) => {
+            {credientialsData.map((ele, idx) => {
+              return (
+                <Option
+                  key={idx}
+                  opt={ele}
+                  setLocation={setLocation}
+                  setSpecilization={setSpecilization}
+                />
+              );
+            })}
+            {/* {data.map((ele, idx) => {
             return <Option key={idx} opt={ele} />;
           })} */}
-          {isLoading ? <Loading /> : <Btn btninfo={btninfo} />}
-        </form>
-      </div>
+            <Btn btninfo={btninfo} loading={isLoading} />
+            {/* {isLoading ? <Loading /> : <Btn btninfo={btninfo} />} */}
+          </form>
+        </div>
       </div>
     </div>
   );
