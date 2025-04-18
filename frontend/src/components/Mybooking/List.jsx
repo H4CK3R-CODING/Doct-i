@@ -8,7 +8,8 @@ import {
   MapPinIcon,
   ChartBarIcon,
   SparklesIcon,
-  VideoCameraIcon 
+  VideoCameraIcon,
+  DocumentTextIcon,
 } from "@heroicons/react/20/solid";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
@@ -261,9 +262,8 @@ export default function List({ bookingDetails }) {
     }
   };
 
-
   // Save the Meeting Link
-  
+
   const handleShare = async (bookingId, meetLink) => {
     if (!meetLink) {
       toast.error("Please enter a valid Meet link");
@@ -285,7 +285,6 @@ export default function List({ bookingDetails }) {
     }
   };
 
-
   const [isOpen, setIsOpen] = useState(false);
   const [link, setLink] = useState("");
   const [error, setError] = useState("");
@@ -298,14 +297,14 @@ export default function List({ bookingDetails }) {
 
   const handleChange = (e) => {
     setLink(e.target.value);
-    setError("");  // Clear error on change
+    setError(""); // Clear error on change
   };
 
   const handleSubmit = () => {
     if (urlRegex.test(link)) {
       toast.success("Valid meeting link!");
       // handleSaveLink(link);  // Pass the link to parent component
-      handleShare(bookingDetails?._id, link)
+      handleShare(bookingDetails?._id, link);
       closePopup();
       setLink("");
     } else {
@@ -314,9 +313,10 @@ export default function List({ bookingDetails }) {
     }
   };
 
-
   return (
-    <div className={`relative bg-white shadow-lg rounded-lg overflow-hidden transition-transform duration-300  hover:shadow-2xl w-full lg:w-[80vw] p-6 mb-6`}>
+    <div
+      className={`relative bg-white shadow-lg rounded-lg overflow-hidden transition-transform duration-300  hover:shadow-2xl w-full lg:w-[80vw] p-6 mb-6`}
+    >
       {/* Status Indicator */}
       <div
         className={`absolute top-2 right-2 px-3 py-1 text-xs font-bold rounded-full ${getStatusStyles()}`}
@@ -444,7 +444,7 @@ export default function List({ bookingDetails }) {
             ""
           )}
         </div>
-        <div className="mt-5  flex lg:ml-4 lg:mt-0">
+        <div className="mt-5 flex lg:ml-4">
           {user == "Patient" && bookingDetails?.status == "pending" ? (
             <span
               onClick={() => {
@@ -520,6 +520,28 @@ export default function List({ bookingDetails }) {
               View Profile
             </button>
           </span>
+
+          {bookingDetails?.reportfile && (
+            <span
+              onClick={() => {
+                window.open(bookingDetails.reportfile, "_blank");
+              }}
+              className={`ml-3 hidden sm:block `}
+            >
+              <button
+                type="button"
+                className="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+              >
+                {/* <LinkIcon
+              aria-hidden="true"
+              className="-ml-0.5 mr-1.5 size-5 text-gray-400"
+            /> */}
+                <DocumentTextIcon className="-ml-0.5 mr-1.5 size-5" />
+
+                View Report File
+              </button>
+            </span>
+          )}
 
           {/* Popup Component */}
           <RatingPopup
@@ -656,7 +678,9 @@ export default function List({ bookingDetails }) {
               </div>
             </div>
           )}
-          {(user !== "Patient" || (user === "Patient" && bookingDetails?.meetLink)) && bookingDetails?.status === "pending" ? (
+          {(user !== "Patient" ||
+            (user === "Patient" && bookingDetails?.meetLink)) &&
+          bookingDetails?.status === "pending" ? (
             <span
               onClick={() => {
                 // handleShare(bookingDetails?._id);
@@ -666,7 +690,7 @@ export default function List({ bookingDetails }) {
                   if (!bookingDetails?.meetLink) {
                     openPopup();
                   } else {
-                    window.open(bookingDetails?.meetLink, "_blank");  // Open the link in a new tab
+                    window.open(bookingDetails?.meetLink, "_blank"); // Open the link in a new tab
                   }
                 } else {
                   bookingDetails?.meetLink
@@ -682,12 +706,14 @@ export default function List({ bookingDetails }) {
                   className={`inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 `}
                 >
                   <VideoCameraIcon className="-ml-0.5 mr-1.5 size-5" />
-                  {user !== "Patient" && !bookingDetails?.meetLink ? "Create Meet" : "Join Meet"}
+                  {user !== "Patient" && !bookingDetails?.meetLink
+                    ? "Create Meet"
+                    : "Join Meet"}
                 </button>
               }
             </span>
           ) : (
-            <div/>
+            <div />
           )}
 
           {/* Dropdown */}

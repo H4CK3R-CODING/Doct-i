@@ -21,7 +21,7 @@ const LoginPatient = () => {
     {
       label: "Username",
       id: "username",
-      placeholder: "doctor@gmail.com",
+      placeholder: "patient@gmail.com",
       inputType: "text",
       onchange: (event) => {
         setUsername(event.target.value);
