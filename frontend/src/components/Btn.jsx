@@ -7,7 +7,7 @@ const Btn = ({ btninfo, loading }) => {
     <button
       ref={btnref}
       disabled={loading}
-      className={`flex w-full my-4 justify-center rounded-md  px-3 py-2 text-sm/6 font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ${loading ? 'bg-black cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-500 cursor-pointer'}`}
+      className={`flex w-full my-4 justify-center rounded-md  px-3 py-2 text-sm/6 font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ${loading ? 'bg-blue-600 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-500 cursor-pointer'}`}
       // className=" drop-shadow-2xl bg-heading brightness-90 text-background border-2 border-black p-2 font-semibold m-1 rounded-lg cursor-pointer"
       onClick={btninfo.onclick}
     >

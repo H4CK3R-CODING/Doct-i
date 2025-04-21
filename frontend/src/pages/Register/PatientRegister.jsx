@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import InputContainer from "../../components/InputContainer/InputContainer";
 import Loading from "../../components/Loading";
 import Btn from "../../components/Btn";
@@ -20,14 +20,48 @@ const PatientRegister = () => {
   const [password, setPassword] = useState("");
   const [gender, setGender] = useState("male");
   const [location, setLocation] = useState("");
-  const navigate = useNavigate();
   const [showPopup, setShowPopup] = useState(false);
+  const [startTimer, setStartTimer] = useState(false);
+  const [remMin, setRemMin] = useState(4);
+  const [remSec, setRemSec] = useState(59);
+  const intervalRef = useRef(null);
+
+  useEffect(() => {
+    if (!startTimer) return;
+
+    // Reset timer values when starting
+    setRemMin(4);
+    setRemSec(59);
+
+    // Clear existing interval if any
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+
+    intervalRef.current = setInterval(() => {
+      setRemSec((prevSec) => {
+        if (prevSec === 0) {
+          setRemMin((prevMin) => {
+            
+            if (prevMin === 0) {
+              clearInterval(intervalRef.current);
+              setStartTimer((prev) => !prev);
+              return 0;
+            }
+            return prevMin - 1;
+          });
+          return 59;
+        }
+        return prevSec - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(intervalRef.current);
+  }, [startTimer]); // trigger effect when `start` changes
 
   const handleOTPSuccess = () => {
     setShowPopup(false);
   };
-
-
 
   const locationArr = [
     {
@@ -146,7 +180,7 @@ const PatientRegister = () => {
           age == null ||
           disease == "" ||
           password == "" ||
-          gender == "" || 
+          gender == "" ||
           location == ""
         ) {
           toast.error("Please Fill Up Important Details");
@@ -162,7 +196,7 @@ const PatientRegister = () => {
           },
         };
         const phoneInt = parseInt(phone);
-        const ageInt = parseInt(age)
+        const ageInt = parseInt(age);
         const { data } = await axios.post(
           `${import.meta.env.VITE_BACKENDURL}/api/v1/user/patientRegister`,
           {
@@ -173,15 +207,16 @@ const PatientRegister = () => {
             disease,
             password,
             gender,
-            location
+            location,
           },
           { withCredentials: true },
           config
         );
         if (data.msg == "Patient Registered") {
-          toast.success("Patient Registered Successfully!");
+          toast.success("OTP Sent!");
           setShowPopup(true);
           setIsOtp(true);
+          setStartTimer(true);
           // navigate("/loginPatient");
         } else if (data.msg == "User already exist") {
           toast.success("User already exist");
@@ -226,43 +261,55 @@ const PatientRegister = () => {
   return (
     <div className="min-h-screen bg-gradient-to-r from-sky-500 to-blue-700 flex flex-col items-center justify-center p-6">
       <div className="bg-white shadow-2xl rounded-2xl max-w-lg w-full p-8 transition-transform duration-300">
-      <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-        <img
-          alt="Your Company"
-          src="user-profile.png"
-          // src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600"
-          className="mx-auto h-20 w-auto"
-        />
-        <h2 className="mt-4 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
-          Register as User
-        </h2>
-      </div>
-      <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-        <form className="space-y-6">
-          {noInput.map((ele, idx) => {
-            return <InputContainer key={idx} detail={ele} />;
-          })}
-          {data.map((ele, idx) => {
-            return <Option key={idx} opt={ele}  setGender={setGender} setLocation={setLocation} />;
-          })}
-          {/* {isLoading ? <Loading /> : <Btn btninfo={btninfo} />} */}
-          {!isOtp && <Btn btninfo={btninfo} loading={isLoading} />}
-        </form>
-        {isOtp && <button
-          onClick={() => setShowPopup(true)}
-          className="bg-green-500 text-white px-6 py-2 my-4 rounded"
-        >
-          Verify Email with OTP
-        </button>}
-        
-        {showPopup && (
-          <OTPPopup
-            gmail={gmail}
-            onClose={() => setShowPopup(false)}
-            onVerify={handleOTPSuccess}
+        <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+          <img
+            alt="Your Company"
+            src="user-profile.png"
+            // src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600"
+            className="mx-auto h-20 w-auto"
           />
-        )}
-      </div>
+          <h2 className="mt-4 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
+            Register as User
+          </h2>
+        </div>
+        <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+          <form className="space-y-6">
+            {noInput.map((ele, idx) => {
+              return <InputContainer key={idx} detail={ele} />;
+            })}
+            {data.map((ele, idx) => {
+              return (
+                <Option
+                  key={idx}
+                  opt={ele}
+                  setGender={setGender}
+                  setLocation={setLocation}
+                />
+              );
+            })}
+            {/* {isLoading ? <Loading /> : <Btn btninfo={btninfo} />} */}
+            {!isOtp && <Btn btninfo={btninfo} loading={isLoading} />}
+          </form>
+          {isOtp && (
+            <button
+              onClick={() => setShowPopup(true)}
+              className="bg-green-500 text-white px-6 py-2 my-4 rounded"
+            >
+              Verify Email with OTP
+            </button>
+          )}
+
+          {showPopup && (
+            <OTPPopup
+              gmail={gmail}
+              onClose={() => setShowPopup(false)}
+              onVerify={handleOTPSuccess}
+              remMin={remMin}
+              remSec={remSec}
+              startTimer={startTimer}
+            />
+          )}
+        </div>
       </div>
     </div>
   );
