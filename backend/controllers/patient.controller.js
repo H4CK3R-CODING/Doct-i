@@ -33,22 +33,23 @@ const patientRegister = async (req, res) => {
     const { name, gmail, phone, age, disease, password, gender, location } =
       req.body;
 
-    const verified = await Patient.findOne({
-      gmail,
-    });
+    // const verified = await Patient.findOne({
+    //   gmail,
+    // });
 
-    if (verified) {
-      res.status(201).json({
-        msg: "User already exist",
-      });
-      return;
-    }
+    // if (verified) {
+    //   res.status(201).json({
+    //     msg: "User already exist",
+    //   });
+    //   return;
+    // }
 
     const salt = bcrypt.genSaltSync(10);
     const hashPass = bcrypt.hashSync(password, salt);
 
     const otp = genOtp();
     console.log(otp);
+    const hashOtp = bcrypt.hashSync(otp, salt);
 
     const mailOption = {
       from: `${gmail}`,
@@ -73,21 +74,42 @@ const patientRegister = async (req, res) => {
       phone,
       age,
       disease,
-      password,
+      password: hashPass,
+      otp : hashOtp,
       gender,
       location,
     });
 
-    await Patient.create({
-      name,
-      gmail,
-      phone,
-      age,
-      disease,
-      password: hashPass,
-      gender,
-      location,
-    });
+    // await Patient.create({
+    //   name,
+    //   gmail,
+    //   phone,
+    //   age,
+    //   disease,
+    //   password: hashPass,
+    //   otp,
+    //   gender,
+    //   location,
+    //   expiredAt: Date.now() + 5*60*1000
+    // });
+
+    await Patient.findOneAndUpdate(
+      { gmail },
+      {
+        $set: {
+          name,
+          phone,
+          age,
+          disease,
+          password: hashPass,
+          otp: hashOtp,
+          gender,
+          location,
+          expieredAt: Date.now() + 5*60*1000,
+        },
+      },
+      { new: true, upsert: true }
+    );
 
     res.status(200).json({
       msg: "Patient Registered",

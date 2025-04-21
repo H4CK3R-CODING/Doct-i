@@ -7,9 +7,11 @@ import toast from "react-hot-toast";
 import validateEmail from "../../../utils/validateEmail";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import OTPPopup from "../../components/OTPPopup/OTPPopup";
 
 const DoctorRegister = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isOtp, setIsOtp] = useState(false);
   const [name, setName] = useState("");
   const [gmail, setGmail] = useState("");
   const [phone, setPhone] = useState(null);
@@ -18,7 +20,13 @@ const DoctorRegister = () => {
   const [password, setPassword] = useState("");
   const [gender, setGender] = useState("male");
   const [location, setLocation] = useState("");
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const [showPopup, setShowPopup] = useState(false);
+
+  const handleOTPSuccess = () => {
+    setShowPopup(false);
+  };
+
 
 
   const locationArr = [
@@ -172,7 +180,9 @@ const DoctorRegister = () => {
         );
         if (data.msg == "Patient Registered") {
           toast.success("Patient Registered Successfully!");
-          navigate("/loginPatient");
+          setShowPopup(true);
+          setIsOtp(true);
+          // navigate("/loginPatient");
         } else if (data.msg == "User already exist") {
           toast.success("User already exist");
         } else {
@@ -180,6 +190,7 @@ const DoctorRegister = () => {
         }
       } catch (error) {
         toast.error("Error on Backend Side");
+        console.error(error);
       } finally {
         setIsLoading(false);
       }
@@ -235,8 +246,22 @@ const DoctorRegister = () => {
             return <Option key={idx} opt={ele}  setGender={setGender} setLocation={setLocation} />;
           })}
           {/* {isLoading ? <Loading /> : <Btn btninfo={btninfo} />} */}
-          <Btn btninfo={btninfo} loading={isLoading} />
+          {!isOtp && <Btn btninfo={btninfo} loading={isLoading} />}
         </form>
+        {isOtp && <button
+          onClick={() => setShowPopup(true)}
+          className="bg-green-500 text-white px-6 py-2 my-4 rounded"
+        >
+          Verify Email with OTP
+        </button>}
+        
+        {showPopup && (
+          <OTPPopup
+            gmail={gmail}
+            onClose={() => setShowPopup(false)}
+            onVerify={handleOTPSuccess}
+          />
+        )}
       </div>
       </div>
     </div>

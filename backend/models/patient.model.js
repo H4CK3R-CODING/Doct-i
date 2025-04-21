@@ -27,6 +27,14 @@ const patientSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    otp: {
+      type: String,
+      required: true,
+    },
+    isVerify: {
+      type: Boolean,
+      default: false,
+    },
     gender: {
       type: String,
       enum: ["male", "female", "other"],
@@ -47,6 +55,9 @@ const patientSchema = new mongoose.Schema(
         "Delhi",
       ],
       required: true,
+    },
+    expieredAt: {
+      type: Date,
     },
   },
   {
