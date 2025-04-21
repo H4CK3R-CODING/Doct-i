@@ -52,9 +52,9 @@ const patientRegister = async (req, res) => {
     const hashOtp = bcrypt.hashSync(otp, salt);
 
     const mailOption = {
-      from: `${gmail}`,
-      to: `<${process.env.SMTP_MAIL}>`, // list of receivers
-      subject: "Query Regarding StudySpotlight", // Subject line
+      from: `<${process.env.SMTP_MAIL}>`,
+      to: `${gmail}`, // list of receivers
+      subject: "Verify OTP", // Subject line
       text: "Hi", // plain text body
       html: `<p>OTP : ${otp}</p>`,
     };
