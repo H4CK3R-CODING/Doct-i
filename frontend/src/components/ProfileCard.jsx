@@ -6,7 +6,7 @@ const ProfileCard = ({ name, role, image, description, onLogin }) => {
       <img
         src={image}
         alt={role}
-        className="w-24 h-24 rounded-full border-4 border-blue-500 shadow mt-4"
+        className="w-24 imgco h-24 rounded-full border-4 border-blue-500 shadow mt-4"
       />
       <h2 className="text-lg font-semibold text-gray-800 mt-2">{role}</h2>
       <button

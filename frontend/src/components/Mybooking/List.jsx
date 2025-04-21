@@ -524,7 +524,7 @@ export default function List({ bookingDetails }) {
           {bookingDetails?.reportfile && (
             <span
               onClick={() => {
-                window.open(bookingDetails.reportfile, "_blank");
+                window.open(bookingDetails?.reportfile, "_blank");
               }}
               className={`ml-3 hidden sm:block `}
             >

@@ -8,6 +8,17 @@ import ratingAuth from "../zod/ratingAuth.js";
 import mongoose from "mongoose";
 import Review from "../models/Review.js";
 import Doctor from "../models/doctor.model.js";
+import nodemailer from "nodemailer";
+
+const transporter = nodemailer.createTransport({
+  host: process.env.SMTP_HOST,
+  port: process.env.SMTP_PORT,
+  secure: false, // Use `true` for port 465, `false` for all other ports
+  auth: {
+    user: process.env.SMTP_MAIL,
+    pass: process.env.SMTP_PASSWORD,
+  },
+});
 
 const patientRegister = async (req, res) => {
   try {
@@ -19,7 +30,8 @@ const patientRegister = async (req, res) => {
       return;
     }
 
-    const { name, gmail, phone, age, disease, password, gender,location } = req.body;
+    const { name, gmail, phone, age, disease, password, gender, location } =
+      req.body;
 
     const verified = await Patient.findOne({
       gmail,
@@ -38,6 +50,23 @@ const patientRegister = async (req, res) => {
     const otp = genOtp();
     console.log(otp);
 
+    const mailOption = {
+      from: `${gmail}`,
+      to: `<${process.env.SMTP_MAIL}>`, // list of receivers
+      subject: "Query Regarding StudySpotlight", // Subject line
+      text: "Hi", // plain text body
+      html: `<p>OTP : ${otp}</p>`,
+    };
+
+    transporter.sendMail(mailOption, (error, info) => {
+      if (error) {
+        console.log(error.message);
+        return;
+      } else {
+        console.log(info);
+      }
+    });
+
     console.log({
       name,
       gmail,
@@ -46,7 +75,7 @@ const patientRegister = async (req, res) => {
       disease,
       password,
       gender,
-      location
+      location,
     });
 
     await Patient.create({
@@ -57,7 +86,7 @@ const patientRegister = async (req, res) => {
       disease,
       password: hashPass,
       gender,
-      location
+      location,
     });
 
     res.status(200).json({
@@ -170,7 +199,7 @@ const setRating = async (req, res) => {
     //     msg: "Review Updated Successfully"
     //   })
     // }
-    
+
     if (isReview) {
       return res.status(200).json({
         msg: "Review Updated Successfully",

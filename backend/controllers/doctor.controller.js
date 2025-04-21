@@ -152,8 +152,12 @@ const searchDoctor = async (req, res) => {
     //   const doctorsList = await Doctor.find({ licence: { $eq: doctor_id } });
     //   return res.status(200).send(doctorsList);
     // }
+    
     let doctorsList;
     if (doctor_id !== "") {
+      if (!mongoose.Types.ObjectId.isValid(doctor_id)) {
+        return res.status(400).json({ msg: "Invalid Booking ID" });
+      }
       doctorsList = await Doctor.find({"_id" : doctor_id}).select("-password").exec();
     } else {
       doctorsList = await Doctor.find({

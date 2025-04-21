@@ -30,7 +30,7 @@ const bookingDoctor = async (req, res) => {
 
     const isBooking = await Booking.findOneAndUpdate(
       { doctor_id, patient_id },
-      { $set: {updateFields, reason : ""}  },
+      { $set: { updateFields, reason: "", reportfile, date, slot } },
       { new: true, upsert: true }
     );
 
@@ -179,11 +179,14 @@ const patientExamined = async (req, res) => {
       return res.status(400).json({ msg: "Invalid Booking ID" });
     }
 
-    const isBooking = await Booking.findByIdAndUpdate({ _id: id },{
-      $set: {
-        status: "completed"
+    const isBooking = await Booking.findByIdAndUpdate(
+      { _id: id },
+      {
+        $set: {
+          status: "completed",
+        },
       }
-    });
+    );
 
     if (!isBooking) {
       return res.status(404).json({
@@ -211,7 +214,7 @@ const shareMeetLink = async (req, res) => {
     }
 
     const updatedBooking = await Booking.findByIdAndUpdate(
-      {_id : bookingId},
+      { _id: bookingId },
       { $set: { meetLink } },
       { new: true }
     );
@@ -228,7 +231,7 @@ const shareMeetLink = async (req, res) => {
     console.error(error);
     res.status(500).json({ msg: "Server Error" });
   }
-}
+};
 
 export {
   bookingDoctor,
@@ -238,5 +241,5 @@ export {
   cancelBookingByPatient,
   patientExamined,
   getBookings,
-  shareMeetLink
+  shareMeetLink,
 };

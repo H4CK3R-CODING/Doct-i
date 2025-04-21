@@ -179,7 +179,7 @@ const BookDoctor = () => {
           </label>
           <input
             type="file"
-            accept=".pdf,.jpg,.png"
+            accept=".pdf,.jpg,.png,.jpeg"
             onChange={handleFileChange}
             className="w-full p-3 border rounded-lg shadow-sm transition focus:ring-2 focus:ring-sky-500"
           />

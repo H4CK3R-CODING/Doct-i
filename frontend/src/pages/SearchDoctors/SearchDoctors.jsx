@@ -169,7 +169,7 @@ const SearchDoctors = () => {
           setUsers([]);
         }
       } catch (error) {
-        toast.error("Error on Backend Side");
+        toast.error(error.response?.data?.msg);
       } finally {
         setIsLoading(false);
       }
