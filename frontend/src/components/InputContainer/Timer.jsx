@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 
 const Timer = () => {
-    const [remMin, setRemMin] = useState(4);
-    const [remSec, setRemSec] = useState(59);
+    const [remMin, setRemMin] = useState(0);
+    const [remSec, setRemSec] = useState(5);
     let intervelId;
     useEffect(()=>{
         intervelId = setInterval(()=>{
@@ -25,7 +25,7 @@ const Timer = () => {
   return (
     <div>
       {
-        remMin==0&&remSec==0 ? <div>OTP Expired</div> : <div>{remMin<10 ? "0"+remMin : remMin} : {remSec<10 ? "0"+remSec : remSec}</div>
+        remMin==0&&remSec==0 ? <p className='text-red-600'>OTP Expired</p> : <div>{remMin<10 ? "0"+remMin : remMin} : {remSec<10 ? "0"+remSec : remSec}</div>
       }
     </div>
   )

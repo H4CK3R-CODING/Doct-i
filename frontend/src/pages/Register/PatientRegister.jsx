@@ -9,7 +9,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import OTPPopup from "../../components/OTPPopup/OTPPopup";
 
-const DoctorRegister = () => {
+const PatientRegister = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isOtp, setIsOtp] = useState(false);
   const [name, setName] = useState("");
@@ -268,4 +268,4 @@ const DoctorRegister = () => {
   );
 };
 
-export default DoctorRegister;
+export default PatientRegister;
