@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 
 const Timer = () => {
-    const [remMin, setRemMin] = useState(0);
-    const [remSec, setRemSec] = useState(5);
+    const [remMin, setRemMin] = useState(4);
+    const [remSec, setRemSec] = useState(59);
     let intervelId;
     useEffect(()=>{
         intervelId = setInterval(()=>{
