@@ -42,7 +42,6 @@ const PatientRegister = () => {
       setRemSec((prevSec) => {
         if (prevSec === 0) {
           setRemMin((prevMin) => {
-            
             if (prevMin === 0) {
               clearInterval(intervalRef.current);
               setStartTimer((prev) => !prev);
@@ -167,69 +166,71 @@ const PatientRegister = () => {
     },
   ];
 
-  const btninfo = {
-    label: "Register",
-    onclick: async (event) => {
-      try {
-        event.preventDefault();
-        setIsLoading(true);
-        if (
-          name == "" ||
-          gmail == "" ||
-          phone == null ||
-          age == null ||
-          disease == "" ||
-          password == "" ||
-          gender == "" ||
-          location == ""
-        ) {
-          toast.error("Please Fill Up Important Details");
-          return;
-        }
-        if (!validateEmail(gmail)) {
-          toast.error("Write Valid Gmail");
-          return;
-        }
-        const config = {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        };
-        const phoneInt = parseInt(phone);
-        const ageInt = parseInt(age);
-        const { data } = await axios.post(
-          `${import.meta.env.VITE_BACKENDURL}/api/v1/user/patientRegister`,
-          {
-            name,
-            gmail,
-            phone: phoneInt,
-            age: ageInt,
-            disease,
-            password,
-            gender,
-            location,
-          },
-          { withCredentials: true },
-          config
-        );
-        if (data.msg == "Patient Registered") {
-          toast.success("OTP Sent!");
-          setShowPopup(true);
-          setIsOtp(true);
-          setStartTimer(true);
-          // navigate("/loginPatient");
-        } else if (data.msg == "User already exist") {
-          toast.success("User already exist");
-        } else {
-          toast.error("Some error fill query form");
-        }
-      } catch (error) {
-        toast.error("Error on Backend Side");
-        console.error(error);
-      } finally {
-        setIsLoading(false);
+  const handleRegister = async (event) => {
+    try {
+      event.preventDefault();
+      setIsLoading(true);
+      if (
+        name == "" ||
+        gmail == "" ||
+        phone == null ||
+        age == null ||
+        disease == "" ||
+        password == "" ||
+        gender == "" ||
+        location == ""
+      ) {
+        toast.error("Please Fill Up Important Details");
+        return;
       }
-    },
+      if (!validateEmail(gmail)) {
+        toast.error("Write Valid Gmail");
+        return;
+      }
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+      const phoneInt = parseInt(phone);
+      const ageInt = parseInt(age);
+      const { data } = await axios.post(
+        `${import.meta.env.VITE_BACKENDURL}/api/v1/user/patientRegister`,
+        {
+          name,
+          gmail,
+          phone: phoneInt,
+          age: ageInt,
+          disease,
+          password,
+          gender,
+          location,
+        },
+        { withCredentials: true },
+        config
+      );
+      if (data.msg == "Patient Registered") {
+        toast.success("OTP Sent!");
+        setShowPopup(true);
+        setIsOtp(true);
+        setStartTimer(true);
+        // navigate("/loginPatient");
+      } else if (data.msg == "User already exist") {
+        toast.success("User already exist");
+      } else {
+        toast.error("Some error fill query form");
+      }
+    } catch (error) {
+      toast.error("Error on Backend Side");
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const btninfo = {
+    label: (isOtp && !startTimer) ? "Resend OTP" : "Register",
+    onclick: handleRegister,
   };
 
   const data = [
@@ -288,16 +289,19 @@ const PatientRegister = () => {
               );
             })}
             {/* {isLoading ? <Loading /> : <Btn btninfo={btninfo} />} */}
-            {!isOtp && <Btn btninfo={btninfo} loading={isLoading} />}
+            {(!isOtp || (isOtp && !startTimer)) && <Btn btninfo={btninfo} loading={isLoading} />}
+
           </form>
-          {isOtp && (
+          {isOtp && startTimer && <Btn btninfo={{label: "Verify Email with OTP", onclick: ()=> setShowPopup(true)}} loading={isLoading}
+          />}
+          {/* {isOtp && startTimer && (
             <button
               onClick={() => setShowPopup(true)}
               className="bg-green-500 text-white px-6 py-2 my-4 rounded"
             >
               Verify Email with OTP
             </button>
-          )}
+          )} */}
 
           {showPopup && (
             <OTPPopup
